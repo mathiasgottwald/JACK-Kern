@@ -1,0 +1,18 @@
+{
+  "fachkraft": "claude-haiku-4-5-20251001",
+  "ceo_und_pruefer": "claude-sonnet-5",
+  "dialog": "claude-sonnet-5",
+  "kimi": {
+    "aktiv": false,
+    "datenfreigabe": false,
+    "modell": "kimi-k2.6",
+    "grund": "Kein MOONSHOT_API_KEY vorhanden; Freigabe der Datenverarbeitung ist noch offen."
+  },
+  "groq": {
+    "aktiv": false,
+    "datenfreigabe": false,
+    "modell": "openai/gpt-oss-120b",
+    "tarif": "free",
+    "grund": "Eingebaut 23.09.2026, abgeschaltet. Nur Datenklasse oeffentlich, drei Aufgabentypen. Aktivierung braucht eine eigene Freigabe des Patrons."
+  }
+}

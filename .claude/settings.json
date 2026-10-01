@@ -1,0 +1,28 @@
+{
+ "hooks": {
+  "PreToolUse": [
+   {
+    "matcher": "Edit|Write|MultiEdit|Bash",
+    "hooks": [
+     {
+      "type": "command",
+      "command": "python3 \"/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/lib/sicherung_hook.py\"",
+      "timeout": 10,
+      "statusMessage": "Sicherung pruefen (Block 26 Nachtrag N3; F-11: auch Bash)"
+     }
+    ]
+   },
+   {
+    "matcher": "Bash",
+    "hooks": [
+     {
+      "type": "command",
+      "command": "python3 \"/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/lib/suche_hook.py\"",
+      "timeout": 10,
+      "statusMessage": "Suche pruefen (F-24: kein grep -r/find ueber JACK ohne Ausschluss betrieb/abnahme)"
+     }
+    ]
+   }
+  ]
+ }
+}

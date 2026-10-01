@@ -1,0 +1,33 @@
+{
+  "fachkraft": "claude-haiku-4-5-20251001",
+  "ceo_und_pruefer": "claude-sonnet-5",
+  "dialog": "claude-sonnet-5",
+  "kimi": {
+    "aktiv": false,
+    "datenfreigabe": false,
+    "modell": "kimi-k2.6",
+    "grund": "Kein MOONSHOT_API_KEY vorhanden; Freigabe der Datenverarbeitung ist noch offen."
+  },
+  "_hinweis": "NUR VORSCHLAG (Block 11, E5). modellwahl.json selbst ist UNVERAENDERT. Uebernommen wird hier nichts ohne die Freigabe des Patrons.",
+  "_stand": "2026-09-17, Nachtkette",
+  "stufe0_lokal": {
+    "anbieter": "lokal",
+    "laufzeit": "mlx",
+    "modell": "Qwen2.5-7B-Instruct-4bit",
+    "pfad": "lokal.nosync/modelle/Qwen2.5-7B-Instruct-4bit",
+    "kosten_usd": 0,
+    "taugt_belegt_fuer": [
+      "klassifizieren",
+      "formatieren"
+    ],
+    "taugt_belegt_NICHT_fuer": [
+      "freie Zusammenfassung - kippte ins Chinesische, Sprachwache greift"
+    ],
+    "grund": "Gemessen 17.09.2026: einordnen 2,3 s, formatieren 3,2 s, beides sauberes Deutsch."
+  },
+  "_vorschlag_aenderung": {
+    "was": "fachkraft fuer die Aufgabenarten klassifizieren und formatieren auf Stufe 0 legen",
+    "ersparnis": "jeder solche Lauf kostet dann 0 statt rund 0,0012 USD",
+    "entscheidet": "der Patron"
+  }
+}

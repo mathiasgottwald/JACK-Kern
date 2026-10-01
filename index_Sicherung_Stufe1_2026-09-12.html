@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JACK</title>
+<style>
+:root{
+  --grund:#020a0c; --metall:#0D3B40; --reflex:#397D80; --lese:#0c2325;
+  --gold:#D4AF37; --goldlicht:#F6E3A6; --petrollicht:#7FE0E4;
+  --text:#F6F0E2; --neben:#9aa79f;
+  --r-feld:12px; --r-flaeche:18px;
+  --schrift:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--grund); color:var(--text); font-family:var(--schrift);
+  font-size:16px; line-height:1.5; overflow:hidden; -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;font-size:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-thumb{background:#17393c;border-radius:3px}
+
+#huelle{display:flex;flex-direction:column;height:100%}
+
+header{display:flex;align-items:center;gap:24px;padding:16px 24px;flex:0 0 auto;
+  border-bottom:1px solid rgba(212,175,55,.14);position:relative;z-index:3}
+#wortmarke{font-size:20px;font-weight:500;letter-spacing:.46em;text-indent:.46em;
+  background:linear-gradient(180deg,#F6E3A6 0%,#D4AF37 52%,#8a6420 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+#zustand{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--neben)}
+#zustand .punkt{width:7px;height:7px;border-radius:50%;background:#F6F0E2;flex:0 0 auto;
+  box-shadow:0 0 10px currentColor;transition:background .3s}
+#zustand.hoert .punkt{background:var(--goldlicht)}
+#zustand.spricht .punkt{background:var(--petrollicht)}
+#zustand.aus .punkt{background:#5d6669}
+#zustand.fehler .punkt{background:#E0574F}
+header .luecke{flex:1}
+header button{font-size:14px;color:var(--neben);padding:8px 14px;min-height:40px;
+  border:1px solid rgba(212,175,55,.22);border-radius:var(--r-feld);transition:.2s}
+header button:hover{color:var(--text);border-color:var(--gold)}
+header button[aria-pressed="true"]{color:#0b1d1f;background:var(--gold);border-color:var(--gold)}
+
+#buehne{flex:1;display:grid;grid-template-columns:300px 1fr 300px;gap:20px;padding:20px;min-height:0;position:relative;z-index:2}
+section.saeule{display:flex;flex-direction:column;gap:16px;min-height:0}
+.flaeche{background:rgba(13,59,64,.20);border:1px solid rgba(212,175,55,.10);
+  border-radius:var(--r-flaeche);padding:16px;display:flex;flex-direction:column;min-height:0;
+  backdrop-filter:blur(8px)}
+.flaeche h2{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(212,175,55,.72);margin-bottom:14px;flex:0 0 auto}
+
+#verlauf{overflow-y:auto;display:flex;flex-direction:column;gap:14px;flex:1}
+.zeile{font-size:15px;line-height:1.55}
+.zeile .wer{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--neben);display:block;margin-bottom:3px}
+.zeile.jack{border-left:2px solid var(--gold);padding-left:12px}
+.zeile.patron{border-left:2px solid #24565a;padding-left:12px;color:var(--neben)}
+#leerhinweis{color:var(--neben);font-size:14px}
+
+#mitte{display:flex;flex-direction:column;align-items:center;gap:14px;min-height:0}
+#kern{flex:1;width:100%;min-height:0;display:flex;align-items:center;justify-content:center;position:relative}
+#kernbuehne{position:relative;height:100%;aspect-ratio:688/1024;max-width:100%;
+  transition:transform .5s cubic-bezier(.22,1,.36,1);
+  /* Die Kanten des Standbilds ausblenden, damit der Kern schwebt statt in einem Kasten zu stehen. */
+  -webkit-mask-image:radial-gradient(ellipse 68% 62% at 50% 48%, #000 46%, rgba(0,0,0,.55) 74%, transparent 100%);
+  mask-image:radial-gradient(ellipse 68% 62% at 50% 48%, #000 46%, rgba(0,0,0,.55) 74%, transparent 100%)}
+#kernbild{width:100%;height:100%;object-fit:contain;display:block}
+#kernbuehne canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#kernfarbe{mix-blend-mode:color}
+#kernglanz{mix-blend-mode:screen}
+#kernersatz{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+  color:var(--neben);font-size:14px;text-align:center;padding:24px}
+
+#zustandtext{font-size:19px;color:var(--text);min-height:28px;text-align:center;letter-spacing:.01em}
+#zustandnebentext{font-size:13px;color:var(--neben);min-height:20px;text-align:center;margin-top:-8px}
+
+#eingabe{display:flex;gap:8px;width:100%;max-width:620px;flex:0 0 auto}
+#feld{flex:1;background:rgba(13,59,64,.30);border:1px solid rgba(212,175,55,.20);
+  border-radius:var(--r-feld);padding:12px 16px;color:var(--text);font-size:16px;outline:none;min-height:44px}
+#feld:focus{border-color:var(--gold)}
+#eingabe button{min-width:44px;min-height:44px;padding:0 18px;font-size:14px;color:var(--neben);
+  border:1px solid rgba(212,175,55,.20);border-radius:var(--r-feld)}
+#eingabe button:hover{color:var(--text);border-color:var(--gold)}
+#stopp{border-color:var(--gold);color:var(--gold)}
+#stopp[hidden]{display:none}
+
+#marken{overflow-y:auto;display:flex;flex-direction:column;gap:2px;flex:1}
+.marke{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;
+  font-size:13px;min-height:40px;width:100%;text-align:left;transition:.18s}
+.marke:hover{background:rgba(212,175,55,.08)}
+.marke .punkt{width:7px;height:7px;border-radius:50%;flex:0 0 auto;box-shadow:0 0 8px currentColor}
+.marke .name{flex:1;color:var(--text);letter-spacing:.04em}
+.marke .wort{font-size:12px;color:var(--neben)}
+.marke.blockiert .punkt{background:#E0574F;color:#E0574F}
+.marke.unbekannt .punkt{background:#5d6669;color:transparent}
+.marke.laeuft .punkt{background:var(--gold);color:var(--gold)}
+
+#verbindungen{display:flex;flex-direction:column;gap:3px;flex:0 0 auto}
+.verb{display:flex;align-items:center;gap:10px;font-size:13px;padding:4px 0}
+.verb .punkt{width:7px;height:7px;border-radius:50%;background:#5d6669;flex:0 0 auto}
+.verb.ja .punkt{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.verb.nein .punkt{background:#E0574F}
+.verb .name{flex:1}
+.verb .wort{color:var(--neben);font-size:12px}
+
+#schleier{position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(ellipse 70% 55% at 50% 46%, rgba(57,125,128,.10), transparent 70%),
+             radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(0,0,0,.55) 100%)}
+
+@media (max-width:1180px){
+  #buehne{grid-template-columns:1fr;grid-template-rows:auto 1fr auto;overflow-y:auto}
+  #kern{min-height:340px}
+}
+</style>
+</head>
+<body>
+<div id="schleier"></div>
+<div id="huelle">
+
+  <header>
+    <div id="wortmarke">JACK</div>
+    <div id="zustand"><span class="punkt"></span><span id="zustandwort">Startet</span></div>
+    <div class="luecke"></div>
+    <button id="stumm" aria-pressed="false">Mikrofon an</button>
+    <button id="neu">Neues Gespräch</button>
+  </header>
+
+  <div id="buehne">
+
+    <section class="saeule">
+      <div class="flaeche" style="flex:1">
+        <h2>Gespräch</h2>
+        <div id="verlauf"><div id="leerhinweis">Noch nichts gesprochen.</div></div>
+      </div>
+    </section>
+
+    <section id="mitte">
+      <div id="kern">
+        <div id="kernbuehne">
+          <img id="kernbild" src="/kern.png" alt="JACKs Sprachkern">
+          <canvas id="kernfarbe"></canvas>
+          <canvas id="kernglanz"></canvas>
+        </div>
+        <div id="kernersatz">Der Sprachkern lässt sich nicht laden. Alle Zustände stehen als Text darunter.</div>
+      </div>
+      <div id="zustandtext">&nbsp;</div>
+      <div id="zustandnebentext">&nbsp;</div>
+      <form id="eingabe" autocomplete="off">
+        <input id="feld" type="text" placeholder="Sprich oder tippe …" aria-label="Eingabe an JACK">
+        <button type="submit">Senden</button>
+        <button type="button" id="stopp" hidden>Stopp</button>
+      </form>
+    </section>
+
+    <section class="saeule">
+      <div class="flaeche" style="flex:1">
+        <h2>Marken</h2>
+        <div id="marken"></div>
+      </div>
+      <div class="flaeche">
+        <h2>Verbindungen</h2>
+        <div id="verbindungen"></div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* =============================================================== Zustände */
+const ZUSTAENDE = {
+  start:     {wort:"Startet",                 klasse:"",       text:"",                        neben:""},
+  bereit:    {wort:"Bereit",                  klasse:"",       text:"Bereit",                  neben:"Sprich einfach los oder tippe."},
+  aus:       {wort:"Mikrofon aus",            klasse:"aus",    text:"Mikrofon aus",            neben:"Texteingabe bleibt möglich."},
+  gesperrt:  {wort:"Mikrofonzugriff fehlt",   klasse:"fehler", text:"Mikrofonzugriff fehlt",   neben:"Erlaube das Mikrofon im Browser. Texteingabe bleibt möglich."},
+  hoert:     {wort:"Ich höre zu",             klasse:"hoert",  text:"Ich höre zu",             neben:""},
+  denkt:     {wort:"Ich prüfe das",           klasse:"hoert",  text:"Ich prüfe das",           neben:"Abbrechen mit Stopp."},
+  spricht:   {wort:"Antwort wird vorgelesen", klasse:"spricht",text:"Antwort wird vorgelesen", neben:"Sprich dazwischen oder drücke Stopp."},
+  gestoppt:  {wort:"Wiedergabe gestoppt",     klasse:"",       text:"Wiedergabe gestoppt",     neben:"Der Text bleibt links stehen."},
+  fehler:    {wort:"Fehlgeschlagen",          klasse:"fehler", text:"Das hat nicht geklappt",  neben:""},
+  getrennt:  {wort:"Verbindung unterbrochen", klasse:"fehler", text:"Verbindung unterbrochen", neben:"JACK läuft nicht oder antwortet nicht."}
+};
+let zustand = "start";
+const eZustand = document.getElementById("zustand");
+const eZustandWort = document.getElementById("zustandwort");
+const eZustandText = document.getElementById("zustandtext");
+const eZustandNeben = document.getElementById("zustandnebentext");
+
+function setzeZustand(name, nebenErsatz){
+  const z = ZUSTAENDE[name]; if(!z) return;
+  zustand = name;
+  eZustand.className = z.klasse;
+  eZustandWort.textContent = z.wort;
+  eZustandText.textContent = z.text || " ";
+  eZustandNeben.textContent = (nebenErsatz !== undefined ? nebenErsatz : z.neben) || " ";
+  document.getElementById("stopp").hidden = !(name === "spricht" || name === "denkt");
+}
+
+/* ================================================================== Licht
+   Der Kern ist ein Standbild. Das Leben steckt im Licht der Fugen:
+     Du sprichst  -> Gold
+     JACK spricht -> leuchtendes Petrol
+     Wartet       -> Cremeweiß, atmet
+   Zwei Ebenen: eine färbt das vorhandene Licht ein, eine legt Glanz darauf. */
+
+const FUGEN = [0.3364, 0.5308];   // Höhe der beiden Fugen im Bild
+const PFUETZE = 0.8467;           // Lichtpfütze auf dem Boden
+
+const FARBEN = {
+  bereit:  [246,240,226],
+  gold:    [246,227,166],
+  petrol:  [127,224,228],
+  ruhe:    [150,163,166],
+  fehler:  [224,87,79]
+};
+
+const cFarbe = document.getElementById("kernfarbe");
+const cGlanz = document.getElementById("kernglanz");
+const kFarbe = cFarbe.getContext("2d");
+const kGlanz = cGlanz.getContext("2d");
+const buehne = document.getElementById("kernbuehne");
+
+let istFarbe = [246,240,226];
+let staub = [];
+
+function messeKern(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const b = buehne.clientWidth, h = buehne.clientHeight;
+  [cFarbe, cGlanz].forEach(c => { c.width = Math.max(1, b*dpr); c.height = Math.max(1, h*dpr); });
+  if(staub.length === 0){
+    for(let i=0;i<26;i++) staub.push({x:Math.random(), y:Math.random(), r:Math.random()*1.6+0.4,
+                                      v:Math.random()*0.00012+0.00004, p:Math.random()*6.28});
+  }
+}
+window.addEventListener("resize", messeKern);
+
+function band(k, w, h, y, breite, hoehe, farbe, staerke){
+  if(staerke <= 0.001) return;
+  const cx = w*0.5, cy = h*y;
+  const rx = Math.max(w*breite, 1), ry = Math.max(h*hoehe, 1);
+  k.save();
+  k.translate(cx, cy); k.scale(1, ry/rx); k.translate(-cx, -cy);
+  const g = k.createRadialGradient(cx, cy, 0, cx, cy, rx);
+  const f = farbe;
+  g.addColorStop(0.00, "rgba("+f[0]+","+f[1]+","+f[2]+","+Math.min(staerke,1)+")");
+  g.addColorStop(0.22, "rgba("+f[0]+","+f[1]+","+f[2]+","+Math.min(staerke*0.55,1)+")");
+  g.addColorStop(0.58, "rgba("+f[0]+","+f[1]+","+f[2]+","+Math.min(staerke*0.16,1)+")");
+  g.addColorStop(1.00, "rgba("+f[0]+","+f[1]+","+f[2]+",0)");
+  k.fillStyle = g;
+  k.beginPath(); k.arc(cx, cy, rx, 0, 6.2832); k.fill();
+  k.restore();
+}
+
+const wenigerBewegung = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let sichtbar = true;
+document.addEventListener("visibilitychange", ()=>{ sichtbar = !document.hidden; });
+
+let t0 = performance.now();
+function lichtSchleife(){
+  requestAnimationFrame(lichtSchleife);
+  if(!sichtbar) return;
+  const w = cFarbe.width, h = cFarbe.height;
+  if(!w || !h) return;
+  const t = (performance.now() - t0) / 1000;
+
+  // Zielfarbe und Stärke aus dem Zustand.
+  let ziel = FARBEN.bereit, staerke = 0.55, weite = 1.0;
+  if(zustand === "hoert"){
+    ziel = FARBEN.gold;   staerke = 0.72 + pegelEin*0.75;  weite = 1.00 + pegelEin*0.55;
+  }else if(zustand === "denkt"){
+    ziel = FARBEN.gold;   staerke = 0.50 + Math.sin(t*4.2)*0.16; weite = 0.68;
+  }else if(zustand === "spricht"){
+    ziel = FARBEN.petrol; staerke = 0.66 + pegelAus*0.95;  weite = 0.95 + pegelAus*0.70;
+  }else if(zustand === "aus" || zustand === "gesperrt"){
+    ziel = FARBEN.ruhe;   staerke = 0.20;                  weite = 0.62;
+  }else if(zustand === "fehler" || zustand === "getrennt"){
+    ziel = FARBEN.fehler; staerke = 0.34;                  weite = 0.66;
+  }else{
+    const atem = wenigerBewegung ? 0 : Math.sin(t*0.55);
+    ziel = FARBEN.bereit; staerke = 0.52 + atem*0.16;      weite = 0.92 + atem*0.10;
+  }
+  for(let i=0;i<3;i++) istFarbe[i] += (ziel[i] - istFarbe[i]) * 0.09;
+  const f = [Math.round(istFarbe[0]), Math.round(istFarbe[1]), Math.round(istFarbe[2])];
+
+  // Ebene 1 — Farbe: färbt das vorhandene weiße Licht um, ohne die Helligkeit zu ändern.
+  kFarbe.clearRect(0,0,w,h);
+  FUGEN.forEach(y => band(kFarbe, w, h, y, 0.62*weite, 0.075*weite, f, 0.95));
+  band(kFarbe, w, h, PFUETZE, 0.50*weite, 0.055*weite, f, 0.85);
+
+  // Ebene 2 — Glanz: der eigentliche Puls.
+  kGlanz.clearRect(0,0,w,h);
+  FUGEN.forEach(y => {
+    band(kGlanz, w, h, y, 0.30*weite, 0.030*weite, f, staerke);
+    band(kGlanz, w, h, y, 0.72*weite, 0.090*weite, f, staerke*0.26);
+  });
+  band(kGlanz, w, h, PFUETZE, 0.42*weite, 0.038*weite, f, staerke*0.45);
+
+  // Strahlen: Licht schießt seitlich aus den Fugen, wenn gesprochen wird.
+  const pegel = (zustand === "hoert") ? pegelEin : (zustand === "spricht" ? pegelAus : 0);
+  if(pegel > 0.02){
+    FUGEN.forEach(y => {
+      band(kGlanz, w, h, y, 1.35 + pegel*0.9, 0.012 + pegel*0.012, f, 0.14 + pegel*0.42);
+    });
+  }
+
+  // Wandernder Glanz auf dem Metall — der Körper wirkt dadurch poliert statt gedruckt.
+  if(!wenigerBewegung){
+    const gy = ((t*0.085) % 1.6) - 0.3;
+    const gg = kGlanz.createLinearGradient(0, (gy-0.10)*h, 0, (gy+0.10)*h);
+    gg.addColorStop(0, "rgba(180,225,230,0)");
+    gg.addColorStop(0.5, "rgba(180,225,230,0.085)");
+    gg.addColorStop(1, "rgba(180,225,230,0)");
+    kGlanz.fillStyle = gg;
+    kGlanz.fillRect(w*0.33, 0, w*0.34, h);
+  }
+
+  // Atmen und Mausparallaxe zusammen — ein einziger Transform.
+  if(!wenigerBewegung){
+    const atmung = 1 + Math.sin(t*0.42)*0.009 + pegel*0.022;
+    buehne.style.transform =
+      "translate3d(" + parX.toFixed(1) + "px," + parY.toFixed(1) + "px,0) scale(" + atmung.toFixed(4) + ")";
+  }
+
+  // Staub im Licht — nur ein Hauch.
+  if(!wenigerBewegung){
+    kGlanz.save();
+    staub.forEach(s => {
+      s.y -= s.v; if(s.y < 0) s.y = 1;
+      const naehe = Math.max(0, 1 - Math.min(Math.abs(s.y-FUGEN[0]), Math.abs(s.y-FUGEN[1]))*5);
+      const a = (0.05 + naehe*0.30) * (0.6 + Math.sin(t*1.4 + s.p)*0.4) * staerke;
+      if(a <= 0) return;
+      kGlanz.fillStyle = "rgba("+f[0]+","+f[1]+","+f[2]+","+a.toFixed(3)+")";
+      kGlanz.beginPath();
+      kGlanz.arc(s.x*w, s.y*h, s.r*(w/700), 0, 6.2832);
+      kGlanz.fill();
+    });
+    kGlanz.restore();
+  }
+}
+
+// Der Kern folgt der Maus minimal — das gibt Tiefe, ohne zu stören.
+let parX = 0, parY = 0;
+if(!wenigerBewegung){
+  window.addEventListener("mousemove", (e) => {
+    parX = (e.clientX / window.innerWidth - 0.5) * -16;
+    parY = (e.clientY / window.innerHeight - 0.5) * -10;
+  });
+}
+document.getElementById("kernbild").addEventListener("error", () => {
+  document.getElementById("kernersatz").style.display = "flex";
+  buehne.style.display = "none";
+});
+
+/* ================================================================= Pegel */
+let pegelEin = 0, pegelAus = 0;
+let tonwelt = null, mikroAnalyse = null, stimmAnalyse = null;
+const puffer = new Uint8Array(64);
+
+function tonweltStarten(){
+  if(tonwelt) return tonwelt;
+  const K = window.AudioContext || window.webkitAudioContext;
+  if(!K) return null;
+  tonwelt = new K();
+  return tonwelt;
+}
+function messePegel(a){
+  if(!a) return 0;
+  a.getByteFrequencyData(puffer);
+  let s = 0; for(let i=0;i<puffer.length;i++) s += puffer[i];
+  return Math.min((s/puffer.length)/95, 1);
+}
+function pegelSchleife(){
+  requestAnimationFrame(pegelSchleife);
+  pegelEin += (messePegel(mikroAnalyse) - pegelEin) * 0.30;
+  pegelAus += (messePegel(stimmAnalyse) - pegelAus) * 0.30;
+}
+async function mikrofonPegelAnbinden(){
+  try{
+    const w = tonweltStarten(); if(!w) return;
+    const strom = await navigator.mediaDevices.getUserMedia({audio:true});
+    const q = w.createMediaStreamSource(strom);
+    mikroAnalyse = w.createAnalyser(); mikroAnalyse.fftSize = 128;
+    q.connect(mikroAnalyse);
+  }catch(e){}
+}
+
+/* =============================================================== Gespräch */
+const eVerlauf = document.getElementById("verlauf");
+function schreibe(wer, text){
+  const leer = document.getElementById("leerhinweis"); if(leer) leer.remove();
+  const d = document.createElement("div");
+  d.className = "zeile " + (wer === "JACK" ? "jack" : "patron");
+  const w = document.createElement("span"); w.className = "wer"; w.textContent = wer;
+  d.appendChild(w); d.appendChild(document.createTextNode(text));
+  eVerlauf.appendChild(d);
+  eVerlauf.scrollTop = eVerlauf.scrollHeight;
+}
+
+let tonAus = null;
+function stoppSprechen(){
+  if(tonAus){ try{ tonAus.pause(); }catch(e){} tonAus = null; }
+  try{ speechSynthesis.cancel(); }catch(e){}
+  stimmAnalyse = null; pegelAus = 0;
+}
+function ruhe(){ setzeZustand(stumm ? "aus" : "bereit"); }
+
+async function sprich(text){
+  stoppSprechen();
+  setzeZustand("spricht");
+  try{
+    const a = await fetch("/stimme", {method:"POST", headers:{"Content-Type":"application/json"},
+                                      body:JSON.stringify({text:text})});
+    if(a.status === 200){
+      const blob = await a.blob();
+      const ton = new Audio(URL.createObjectURL(blob));
+      tonAus = ton;
+      try{
+        const w = tonweltStarten();
+        if(w){
+          if(w.state === "suspended") await w.resume();
+          const q = w.createMediaElementSource(ton);
+          stimmAnalyse = w.createAnalyser(); stimmAnalyse.fftSize = 128;
+          q.connect(stimmAnalyse); stimmAnalyse.connect(w.destination);
+        }
+      }catch(e){}
+      ton.onended = () => { if(tonAus === ton){ tonAus = null; stimmAnalyse = null; ruhe(); } };
+      await ton.play();
+      return;
+    }
+  }catch(e){}
+  try{
+    const s = new SpeechSynthesisUtterance(text);
+    s.lang = "de-DE"; s.rate = 1.02;
+    s.onend = () => ruhe();
+    speechSynthesis.speak(s);
+  }catch(e){ ruhe(); }
+}
+
+let laeuft = false;
+async function frage(text){
+  if(!text || laeuft) return;
+  laeuft = true;
+  schreibe("Patron", text);
+  setzeZustand("denkt");
+  try{
+    const a = await fetch("/frage", {method:"POST", headers:{"Content-Type":"application/json"},
+                                     body:JSON.stringify({text:text})});
+    if(!a.ok) throw new Error("HTTP " + a.status);
+    const d = await a.json();
+    schreibe("JACK", d.antwort);
+    laeuft = false;
+    ladeLage();
+    await sprich(d.antwort);
+  }catch(e){
+    laeuft = false;
+    setzeZustand("getrennt");
+    schreibe("JACK", "Ich konnte den Server nicht erreichen. Es wurde nichts ausgeführt.");
+  }
+}
+
+/* ==================================================================== Ohr */
+let ohr = null, stumm = false, ohrLaeuft = false;
+function ohrBauen(){
+  const E = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!E){ setzeZustand("gesperrt", "Dieser Browser kennt keine Spracheingabe. Texteingabe bleibt möglich."); return; }
+  ohr = new E();
+  ohr.lang = "de-DE"; ohr.continuous = true; ohr.interimResults = true;
+  ohr.onstart = () => { ohrLaeuft = true; };
+  ohr.onend = () => { ohrLaeuft = false; if(!stumm) setTimeout(()=>{ try{ ohr.start(); }catch(e){} }, 350); };
+  ohr.onerror = (e) => {
+    if(e.error === "not-allowed" || e.error === "service-not-allowed"){
+      stumm = true; knopfStumm(); setzeZustand("gesperrt");
+    }
+  };
+  ohr.onresult = (e) => {
+    if(tonAus || speechSynthesis.speaking) stoppSprechen();
+    let fertig = "";
+    for(let i = e.resultIndex; i < e.results.length; i++){
+      if(e.results[i].isFinal) fertig += e.results[i][0].transcript;
+    }
+    if(!laeuft && zustand !== "denkt" && zustand !== "hoert") setzeZustand("hoert");
+    fertig = fertig.trim();
+    if(fertig.length >= 3) frage(fertig);
+  };
+  starteOhr();
+}
+function starteOhr(){ if(ohr && !ohrLaeuft && !stumm){ try{ ohr.start(); }catch(e){} } }
+
+const eStumm = document.getElementById("stumm");
+function knopfStumm(){
+  eStumm.textContent = stumm ? "Mikrofon aus" : "Mikrofon an";
+  eStumm.setAttribute("aria-pressed", stumm ? "true" : "false");
+}
+eStumm.addEventListener("click", () => {
+  stumm = !stumm; knopfStumm();
+  if(stumm){ try{ ohr && ohr.stop(); }catch(e){} pegelEin = 0; setzeZustand("aus"); }
+  else { starteOhr(); mikrofonPegelAnbinden(); setzeZustand("bereit"); }
+});
+
+/* ============================================================== Bedienung */
+document.getElementById("eingabe").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const f = document.getElementById("feld");
+  const t = f.value.trim(); if(!t) return;
+  f.value = ""; stoppSprechen(); frage(t);
+});
+document.getElementById("stopp").addEventListener("click", () => {
+  stoppSprechen(); setzeZustand("gestoppt"); setTimeout(ruhe, 1400);
+});
+document.getElementById("neu").addEventListener("click", async () => {
+  stoppSprechen();
+  try{ await fetch("/neu"); }catch(e){}
+  eVerlauf.innerHTML = '<div id="leerhinweis">Noch nichts gesprochen.</div>';
+  ruhe();
+});
+document.addEventListener("keydown", (e) => {
+  if(e.key === "Escape"){ stoppSprechen(); setzeZustand("gestoppt"); setTimeout(ruhe, 1400); }
+});
+
+/* ================================================================= Marken */
+const eMarken = document.getElementById("marken");
+async function ladeLage(){
+  try{
+    const liste = await (await fetch("/lage")).json();
+    eMarken.innerHTML = "";
+    liste.forEach(m => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "marke " + (m.blockiert ? "blockiert" : (m.unbekannt ? "unbekannt" : "laeuft"));
+      b.innerHTML = '<span class="punkt"></span><span class="name"></span><span class="wort"></span>';
+      b.querySelector(".name").textContent = m.marke.replace(/_/g," ");
+      b.querySelector(".wort").textContent = m.blockiert ? "blockiert" : (m.unbekannt ? "unbekannt" : "läuft");
+      b.title = m.stand || "Kein Stand hinterlegt.";
+      b.addEventListener("click", () => {
+        const f = document.getElementById("feld");
+        f.value = "Wie ist der Stand bei " + m.marke.replace(/_/g," ") + "?";
+        f.focus();
+      });
+      eMarken.appendChild(b);
+    });
+  }catch(e){
+    eMarken.innerHTML = '<div style="color:var(--neben);font-size:13px">Stand nicht abrufbar.</div>';
+  }
+}
+
+/* =========================================================== Verbindungen */
+const eVerb = document.getElementById("verbindungen");
+function verbZeile(name, ok, ja, nein){
+  const d = document.createElement("div");
+  d.className = "verb " + (ok ? "ja" : "nein");
+  d.innerHTML = '<span class="punkt"></span><span class="name"></span><span class="wort"></span>';
+  d.querySelector(".name").textContent = name;
+  d.querySelector(".wort").textContent = ok ? ja : nein;
+  eVerb.appendChild(d);
+}
+async function ladeStatus(){
+  eVerb.innerHTML = "";
+  try{
+    const s = await (await fetch("/status")).json();
+    verbZeile("Denken", s.schluessel, "verbunden", "kein Schlüssel");
+    verbZeile("Stimme · Arthur", s.stimme, "verbunden", "Mac-Stimme");
+    verbZeile("Gedächtnis", (s.marken||[]).length > 0, (s.marken||[]).length + " Marken", "nicht erreichbar");
+  }catch(e){
+    verbZeile("JACK-Server", false, "", "nicht erreichbar");
+    setzeZustand("getrennt");
+  }
+  verbZeile("Mikrofon", !!(window.SpeechRecognition || window.webkitSpeechRecognition), "bereit", "nicht verfügbar");
+}
+
+/* ================================================================== Start */
+async function starten(){
+  messeKern();
+  pegelSchleife();
+  lichtSchleife();
+  await ladeStatus();
+  await ladeLage();
+  knopfStumm();
+  ohrBauen();
+  mikrofonPegelAnbinden();
+  setzeZustand("bereit");
+  try{
+    const d = await (await fetch("/begruessung")).json();
+    schreibe("JACK", d.text);
+    setTimeout(() => sprich(d.text), 700);
+  }catch(e){ setzeZustand("getrennt"); }
+}
+window.addEventListener("load", messeKern);
+starten();
+</script>
+</body>
+</html>

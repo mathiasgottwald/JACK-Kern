@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JACK</title>
+<style>
+  :root{--grund:#05070F;--tief:#0B1020;--gold:#C9A24B;--goldhell:#E7C87E;
+        --petrol:#128388;--petrolhell:#1BA6AC;--text:#E8E9EC;--matt:#7E8592}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:radial-gradient(circle at 50% 30%,var(--tief),var(--grund) 72%);
+       color:var(--text);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+       display:grid;grid-template-rows:auto 1fr auto;height:100vh;overflow:hidden}
+  header{display:flex;justify-content:space-between;align-items:center;padding:16px 26px;
+         border-bottom:1px solid rgba(201,162,75,.14)}
+  .marke{font-size:12px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold)}
+  .cockpit{display:flex;gap:20px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--matt)}
+  .cockpit b{font-weight:500;color:var(--petrolhell)}
+  main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;
+       gap:30px;padding:20px 40px;min-height:0}
+  #buehne{position:relative;display:grid;place-items:center;height:100%}
+  canvas{position:absolute;width:min(62vh,520px);height:min(62vh,520px)}
+  #kern{width:190px;height:190px;border-radius:50%;z-index:2;cursor:pointer;
+        background:url('/jack_portrait.png') center/cover no-repeat,#0B1020;
+        box-shadow:0 0 60px rgba(201,162,75,.35);transition:transform .3s,box-shadow .3s}
+  #kern.wach{box-shadow:0 0 110px rgba(27,166,172,.5),0 0 46px rgba(201,162,75,.55)}
+  #kern:active{transform:scale(.94)}
+  #zustand{position:absolute;bottom:4%;font-size:11px;letter-spacing:.34em;
+           text-transform:uppercase;color:var(--petrolhell)}
+  #rechts{display:flex;flex-direction:column;height:100%;min-height:0;gap:12px;padding:10px 0}
+  #verlauf{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-right:6px}
+  .blase{padding:11px 15px;border-radius:14px;max-width:92%;white-space:pre-wrap;font-size:14.5px}
+  .ich{align-self:flex-end;background:rgba(18,131,136,.16);border:1px solid rgba(27,166,172,.3)}
+  .er{align-self:flex-start;background:rgba(201,162,75,.09);border:1px solid rgba(201,162,75,.26)}
+  .notiz{align-self:flex-start;font-size:11.5px;color:var(--matt);letter-spacing:.04em;
+         border-left:2px solid var(--petrol);padding-left:10px}
+  #zeile{display:flex;gap:9px}
+  input,button{font:inherit;border-radius:11px;border:1px solid rgba(201,162,75,.26);
+        background:rgba(255,255,255,.04);color:var(--text);padding:11px 15px}
+  input{flex:1;min-width:0}
+  button{cursor:pointer;color:var(--gold);white-space:nowrap}
+  button:hover{border-color:var(--gold)}
+  footer{padding:10px 26px;border-top:1px solid rgba(201,162,75,.12);
+         font-size:11px;color:var(--matt);display:flex;gap:18px;justify-content:space-between}
+  #hinweis{color:var(--matt)}
+  @media(max-width:900px){main{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+                          canvas{width:44vh;height:44vh}}
+</style>
+</head>
+<body>
+<header>
+  <div class="marke">J A C K</div>
+  <div class="cockpit">
+    <span>Gedächtnis <b id="cMarken">–</b></span>
+    <span>Gespräch <b id="cVerlauf">0</b></span>
+    <span>Stimme <b id="cStimme">–</b></span>
+    <span>Weckwort <b id="cWach">aus</b></span>
+  </div>
+</header>
+
+<main>
+  <div id="buehne">
+    <canvas id="ring" width="900" height="900"></canvas>
+    <div id="kern" title="Antippen und sprechen"></div>
+    <div id="zustand">bereit</div>
+  </div>
+  <div id="rechts">
+    <div id="verlauf"></div>
+    <div id="zeile">
+      <input id="eingabe" placeholder="… oder hier tippen" autocomplete="off">
+      <button id="senden">Senden</button>
+      <button id="wach">Weckwort an</button>
+      <button id="neu">Neu</button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span id="hinweis">Kern antippen und sprechen. Oder Weckwort einschalten und einfach „JACK“ sagen.</span>
+  <span>GOTT WALD HOLDING</span>
+</footer>
+
+<script>
+const kern=el('kern'),zustandEl=el('zustand'),verlauf=el('verlauf'),eingabe=el('eingabe'),
+      hinweis=el('hinweis'),leinwand=el('ring'),stift=leinwand.getContext('2d');
+function el(i){return document.getElementById(i)}
+
+let pegelEin=0, pegelAus=0, phase=0, hoert=false, wachmodus=false, denkt=false, stimme=null;
+
+/* ---------- Visualizer: reagiert auf dich UND auf Arthur ---------- */
+function zeichne(){
+  const b=leinwand.width,m=b/2;
+  stift.clearRect(0,0,b,b);
+  phase+=denkt?0.05:0.018;
+  const p=Math.max(pegelEin,pegelAus*1.1);
+  for(let r=0;r<4;r++){
+    const grund=150+r*52, schwung=Math.sin(phase+r*0.8)*7 + p*(80+r*30);
+    stift.beginPath();
+    for(let i=0;i<=160;i++){
+      const w=(i/160)*Math.PI*2;
+      const radius=grund+schwung*Math.sin(w*(3+r)+phase*(1+r*0.35));
+      const x=m+Math.cos(w)*radius, y=m+Math.sin(w)*radius;
+      i?stift.lineTo(x,y):stift.moveTo(x,y);
+    }
+    stift.closePath();
+    const gold = pegelAus>0.02 || r===0;
+    stift.strokeStyle = r===0 ? 'rgba(201,162,75,'+(0.5+p*0.45)+')'
+                     : gold&&pegelAus>0.02 ? 'rgba(231,200,126,'+(0.12+p*0.4)+')'
+                     : 'rgba(27,166,172,'+(0.12+p*0.32)+')';
+    stift.lineWidth = r===0?3:1.4;
+    stift.stroke();
+  }
+  kern.classList.toggle('wach', wachmodus||hoert);
+  requestAnimationFrame(zeichne);
+}
+zeichne();
+
+/* ---------- Mikrofonpegel ---------- */
+let mikroBereit=false;
+async function mikrofon(){
+  if(mikroBereit) return; mikroBereit=true;
+  try{
+    const strom=await navigator.mediaDevices.getUserMedia({audio:true});
+    const kontext=new (window.AudioContext||window.webkitAudioContext)();
+    const a=kontext.createAnalyser(); a.fftSize=512;
+    kontext.createMediaStreamSource(strom).connect(a);
+    const d=new Uint8Array(a.frequencyBinCount);
+    (function messen(){
+      a.getByteTimeDomainData(d);
+      let s=0; for(const w of d) s+=Math.abs(w-128);
+      const roh=(s/d.length)/26;
+      pegelEin = (hoert||wachmodus) ? Math.min(1,roh) : pegelEin*0.88;
+      requestAnimationFrame(messen);
+    })();
+  }catch(e){ hinweis.textContent='Kein Mikrofonzugriff — Tippen funktioniert trotzdem.'; }
+}
+
+/* ---------- Stimme ---------- */
+function stimmeWaehlen(){
+  const alle=speechSynthesis.getVoices();
+  stimme = alle.find(s=>s.lang.startsWith('de')&&/markus|yannick|viktor/i.test(s.name))
+        || alle.find(s=>s.lang.startsWith('de')) || alle[0] || null;
+}
+speechSynthesis.onvoiceschanged=stimmeWaehlen; stimmeWaehlen();
+
+function macStimme(text){
+  try{ speechSynthesis.cancel();
+    const s=new SpeechSynthesisUtterance(text);
+    if(stimme) s.voice=stimme;
+    s.lang='de-DE'; s.rate=1.02; s.pitch=.95;
+    s.onend=()=>fertigGesprochen();
+    speechSynthesis.speak(s);
+  }catch(e){ fertigGesprochen(); }
+}
+
+async function sprich(text){
+  setzeZustand('spricht');
+  try{
+    const a=await fetch('/stimme',{method:'POST',headers:{'Content-Type':'application/json'},
+                                   body:JSON.stringify({text})});
+    if(a.status===200){
+      const ton=new Audio(URL.createObjectURL(await a.blob()));
+      try{
+        const k=new (window.AudioContext||window.webkitAudioContext)();
+        const an=k.createAnalyser(); an.fftSize=256;
+        k.createMediaElementSource(ton).connect(an); an.connect(k.destination);
+        const d=new Uint8Array(an.frequencyBinCount);
+        (function m(){ an.getByteTimeDomainData(d);
+          let s=0; for(const w of d) s+=Math.abs(w-128);
+          pegelAus = ton.paused ? pegelAus*0.85 : Math.min(1,(s/d.length)/22);
+          if(!ton.ended) requestAnimationFrame(m); else pegelAus=0; })();
+      }catch(e){}
+      ton.onended=()=>{pegelAus=0; fertigGesprochen();};
+      ton.onerror=()=>macStimme(text);
+      await ton.play(); return;
+    }
+  }catch(e){}
+  macStimme(text);
+}
+function fertigGesprochen(){
+  setzeZustand(wachmodus?'wartet auf „Jack“':'bereit');
+  if(wachmodus) starteOhr();
+}
+
+/* ---------- Ohr ---------- */
+const Erkennung=window.SpeechRecognition||window.webkitSpeechRecognition;
+let ohr=null, laeuft=false;
+if(Erkennung){
+  ohr=new Erkennung(); ohr.lang='de-DE'; ohr.interimResults=false; ohr.continuous=true;
+  ohr.onstart=()=>{laeuft=true; hoert=true; if(!wachmodus) setzeZustand('hört zu');};
+  ohr.onerror=()=>{laeuft=false; hoert=false;};
+  ohr.onend=()=>{laeuft=false; hoert=false; if(wachmodus&&!denkt) setTimeout(starteOhr,400);};
+  ohr.onresult=e=>{
+    const text=e.results[e.results.length-1][0].transcript.trim();
+    if(!text) return;
+    if(wachmodus){
+      const t=text.toLowerCase();
+      if(!/\b(jack|jak|jäck|check)\b/.test(t)) return;
+      const rest=text.replace(/^[^a-zA-ZäöüÄÖÜ]*\b(jack|jak|jäck|check)\b[,.\s]*/i,'').trim();
+      if(!rest){ setzeZustand('hört zu'); return; }
+      frageStellen(rest);
+    }else{
+      try{ohr.stop();}catch(e){}
+      frageStellen(text);
+    }
+  };
+}else{ hinweis.textContent='Spracheingabe braucht Google Chrome. Tippen funktioniert überall.'; }
+
+function starteOhr(){ if(ohr&&!laeuft&&!denkt){ try{ohr.start();}catch(e){} } }
+
+kern.onclick=()=>{ if(!ohr) return eingabe.focus(); mikrofon(); starteOhr(); };
+el('wach').onclick=()=>{
+  wachmodus=!wachmodus;
+  el('cWach').textContent=wachmodus?'an':'aus';
+  el('wach').textContent=wachmodus?'Weckwort aus':'Weckwort an';
+  if(wachmodus){ mikrofon(); starteOhr(); setzeZustand('wartet auf „Jack“'); }
+  else{ try{ohr&&ohr.stop();}catch(e){} setzeZustand('bereit'); }
+};
+el('neu').onclick=async()=>{ await fetch('/neu'); verlauf.innerHTML=''; el('cVerlauf').textContent='0';
+                             blase('Gespräch zurückgesetzt.','notiz'); };
+
+/* ---------- Gespräch ---------- */
+function setzeZustand(t){ zustandEl.textContent=t; }
+function blase(text,wer){
+  const d=document.createElement('div'); d.className=wer==='notiz'?'notiz':'blase '+wer;
+  d.textContent=text; verlauf.appendChild(d); verlauf.scrollTop=verlauf.scrollHeight;
+}
+async function frageStellen(text){
+  if(!text.trim()||denkt) return;
+  denkt=true; blase(text,'ich'); eingabe.value=''; setzeZustand('denkt nach');
+  try{ohr&&ohr.stop();}catch(e){}
+  try{
+    const a=await fetch('/frage',{method:'POST',headers:{'Content-Type':'application/json'},
+                                 body:JSON.stringify({text})});
+    const d=await a.json();
+    blase(d.antwort,'er');
+    if(d.notiz) blase('Abgelegt: '+d.notiz,'notiz');
+    denkt=false; sprich(d.antwort);
+    fetch('/status').then(r=>r.json()).then(s=>el('cVerlauf').textContent=s.verlauf).catch(()=>{});
+  }catch(e){
+    denkt=false;
+    blase('Ich erreiche meinen eigenen Dienst nicht. Läuft das schwarze Fenster noch?','er');
+    setzeZustand('bereit');
+  }
+}
+el('senden').onclick=()=>frageStellen(eingabe.value);
+eingabe.onkeydown=e=>{ if(e.key==='Enter') frageStellen(eingabe.value); };
+
+fetch('/status').then(r=>r.json()).then(s=>{
+  el('cMarken').textContent=s.marken.length+' Marken';
+  el('cStimme').textContent=s.stimme?'Arthur':'Mac';
+  el('cVerlauf').textContent=s.verlauf;
+  if(!s.schluessel) hinweis.textContent='Kein Zugangsschlüssel — siehe SCHLUESSEL.txt im Ordner JACK.';
+}).catch(()=>{});
+</script>
+</body>
+</html>

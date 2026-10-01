@@ -1,0 +1,248 @@
+{
+ "455f6346-983a-4c34-9512-ce17e7b35e6b": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/server.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/index.html",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_steuerung.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/sprache_saetze.json",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/RUECKROLLWEGE.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/ACTIVE_CONTEXT.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/NAECHSTE_SCHRITTE.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_sprache.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/lib/jack_sprache.js"
+ ],
+ "c21bebc1-8dd5-4a86-8773-974f4356107c": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/RUECKROLLWEGE.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_regeln.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/entscheidungsregeln.json"
+ ],
+ "6463434e-16b9-486f-9f31-f4c6da43b110": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_mitarbeiter.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_postfaecher.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_freigaben.py"
+ ],
+ "50814786-df24-47d8-bf9a-b62923bbc430": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_regeln.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_oberflaeche.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/index.html",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/server.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/steuerung_katalog.json",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_steuerung.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/RUECKROLLWEGE.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/ACTIVE_CONTEXT.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/NAECHSTE_SCHRITTE.md"
+ ],
+ "21cc2195-d29f-4ff0-844f-5174cff45caf": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_planer.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_auftragsstart.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/server.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/index.html",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_guthaben.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_kosten.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/agenten/90_Pruefer/pruefer.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/motor_direkt.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_wegsucher.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_gedaechtnis.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_berater.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/ACTIVE_CONTEXT.md"
+ ],
+ "ff7331ff-5864-49ec-be07-b663ea8f17b7": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/arbeiter.sh",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_auftrag.py"
+ ],
+ "ad7b070e-72e8-41c1-8914-d91184e0c317": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/videoproduktion.json",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_higgsfield.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_runway.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_medien.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_videoproduktion.py"
+ ],
+ "9c830a85-1adc-428d-a7c0-eaa0d1f6d03a": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/server.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/ACTIVE_CONTEXT.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_planer.py"
+ ],
+ "e50807b5-8a7b-4e6a-a4cd-8d79d8d1b188": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_auftrag.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/arbeiter.sh",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/agenten/90_Pruefer/pruefer.md"
+ ],
+ "88d7b9c5-e2bb-40fc-9775-af5e0a7d2d98": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_kosten.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_higgsfield.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_runway.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_videoproduktion.py"
+ ],
+ "6b276647-ba6b-4c20-b11e-8613b2a8fa26": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/videoproduktion.json",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_videoproduktion.py"
+ ],
+ "49d52c4b-c662-4b41-a41d-613557b8bfdf": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/betriebsgrenzen.json"
+ ],
+ "40219105-457f-44ac-80c9-ed9ae18fc58f": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/videoproduktion.json",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_higgsfield.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_videoproduktion.py"
+ ],
+ "d32b90a6-fe7e-44b3-b0a5-b33b93d7b469": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_higgsfield.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_runway.py"
+ ],
+ "c53e7abd-d402-4b49-9f67-b395feed7edf": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_regeln.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/ACTIVE_CONTEXT.md"
+ ],
+ "b7295db2-6f19-4f48-aee1-987d4cee9e7d": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/NAECHSTE_SCHRITTE.md"
+ ],
+ "9c14173b-5b07-4f3b-bec9-f54fca766229": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/videoproduktion.json"
+ ],
+ "4e6c591c-b9c6-4821-a756-9082634b2ff0": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_videoproduktion.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_higgsfield.py"
+ ],
+ "07c71da4-725c-4662-a5ed-a0200669d76f": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/NAECHSTE_SCHRITTE.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_video_sandbox.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/arbeiter.sh"
+ ],
+ "05b5e904-763f-49ea-829e-6c3299c1b59b": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_videoproduktion.py"
+ ],
+ "9114a754-c842-4ace-a800-021f251f86b3": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_auftrag.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/NAECHSTE_SCHRITTE.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_kalender.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/motor_direkt.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/modell_router.py"
+ ],
+ "86ee95b9-29b5-4b38-98a5-5f8100fa75bc": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/videoproduktion.json"
+ ],
+ "2984222e-7633-4e13-b438-d8d3ba126845": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_auftrag.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/server.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/arbeiter.sh"
+ ],
+ "0d6fd0dc-2119-4e07-986c-de33e7ce4702": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_dokumente.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_erweiterungen.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_nutzung.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_faehigkeiten.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_sperren.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_auftrag.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/index.html"
+ ],
+ "bc029ca0-5f37-4894-8097-7ea8ef49c78d": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_planer.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_kosten.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_runway.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_higgsfield.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_videokette.py"
+ ],
+ "adbd24dc-b5b4-42a3-bccb-6d16b99fbd63": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_vorgaenge.py"
+ ],
+ "f8aea42b-e6be-4c5e-b135-582c00006000": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_kosten.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/arbeiter_api_start.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/arbeiter.sh",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/lib/sicherung_hook.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_auftrag.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/agenten/90_Pruefer/pruefer.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_vorgaenge.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_postfaecher.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_planer.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_gegenproben.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_grenzen.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/server.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/index.html",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_lernen.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_erfahrung.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_abnahmezettel.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_bremsen.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_obsidian.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/postfaecher.json",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_externmail.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_freigaben.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/agenten/BESETZUNG.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/faehigkeiten/FAEHIGKEITSREGISTER.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_oberflaeche.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_regeln.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_kalender.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/standort.json",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_termine.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_mitarbeiter.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_vertraege.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_auftragsschreiber.py"
+ ],
+ "_zuletzt": {
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_auftrag.py": 1790258218.109854,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/agenten/90_Pruefer/pruefer.md": 1790258242.466826,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_vorgaenge.py": 1790258253.681726,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_postfaecher.py": 1790697995.849975,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_planer.py": 1790258537.451864,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_gegenproben.py": 1790258735.620044,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_grenzen.py": 1790260197.2841642,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/server.py": 1790698109.310621,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/index.html": 1790792874.695151,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/sprache_saetze.json": 1790263341.083312,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_lernen.py": 1790265526.035328,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_erfahrung.py": 1790265576.809077,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_abnahmezettel.py": 1790265586.933455,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_bremsen.py": 1790265604.195991,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/modell_router.py": 1790266956.867757,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_obsidian.py": 1790269714.5340521,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/herzschlag/logos.json": 1790277245.657644,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/RUECKROLLWEGE.md": 1790290836.9309912,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/herzschlag/sprache.json": 1790310256.382634,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/postfaecher.json": 1790329109.230859,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_externmail.py": 1790336397.9040241,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_freigaben.py": 1790336474.4877079,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/agenten/BESETZUNG.md": 1790521619.411562,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/faehigkeiten/FAEHIGKEITSREGISTER.md": 1790588218.547224,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_oberflaeche.py": 1790801282.344119,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_regeln.py": 1790604121.203857,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_kalender.py": 1790613316.151291,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/standort.json": 1790613449.728263,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_termine.py": 1790613607.813022,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_mitarbeiter.py": 1790767970.091258,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_vertraege.py": 1790689470.181825,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_auftragsschreiber.py": 1790689560.207577,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_kreuzpruefung.py": 1790746064.2336042,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_zusagen.py": 1790772995.1104882,
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/netzwaechter.json": 1790797109.196914
+ },
+ "67b57f58-7154-466e-a6da-086612350f82": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/sprache_saetze.json",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/modell_router.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/RUECKROLLWEGE.md",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/herzschlag/sprache.json",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/server.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/index.html"
+ ],
+ "9a86d5d6-347b-4635-8a69-3ecaa7d02ec2": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/herzschlag/logos.json"
+ ],
+ "1c7e0123-4482-4b55-82b4-c5c92d6b9a3e": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/faehigkeiten/FAEHIGKEITSREGISTER.md"
+ ],
+ "975fb240-65b9-4856-a5b1-3006a67b87ed": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_postfaecher.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/server.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/index.html",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_oberflaeche.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_kreuzpruefung.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_mitarbeiter.py",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_zusagen.py"
+ ],
+ "6bfe2c6e-99c4-41fe-b49f-5615775267ea": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/index.html"
+ ],
+ "bd63bf2b-e034-4067-aa61-773a2eebe074": [
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/index.html",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/betrieb/netzwaechter.json",
+  "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/jack_oberflaeche.py"
+ ]
+}

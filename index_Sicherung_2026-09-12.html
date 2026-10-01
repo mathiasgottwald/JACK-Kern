@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JACK</title>
+<style>
+  :root{ --grund:#05070F; --tief:#0B1020; --gold:#C9A24B; --goldhell:#E7C87E; --petrol:#128388; --petrolhell:#1BA6AC; --text:#E8E9EC; }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 35%,var(--tief),var(--grund) 70%);
+       color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+       display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:20px}
+  h1{margin:0;font-size:13px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);font-weight:500}
+  #buehne{position:relative;width:300px;height:300px;display:grid;place-items:center}
+  canvas{position:absolute;inset:0;width:300px;height:300px}
+  #kern{width:74px;height:74px;border-radius:50%;background:radial-gradient(circle at 38% 32%,var(--goldhell),var(--gold) 55%,#7d5f22);
+        box-shadow:0 0 46px rgba(201,162,75,.5);cursor:pointer;transition:transform .25s;z-index:2}
+  #kern:active{transform:scale(.94)}
+  #zustand{min-height:22px;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--petrolhell)}
+  #verlauf{width:min(680px,100%);max-height:38vh;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+  .blase{padding:12px 16px;border-radius:14px;max-width:88%;white-space:pre-wrap}
+  .ich{align-self:flex-end;background:rgba(18,131,136,.18);border:1px solid rgba(27,166,172,.35)}
+  .er{align-self:flex-start;background:rgba(201,162,75,.10);border:1px solid rgba(201,162,75,.28)}
+  #zeile{width:min(680px,100%);display:flex;gap:10px}
+  input,button{font:inherit;border-radius:12px;border:1px solid rgba(201,162,75,.3);
+        background:rgba(255,255,255,.04);color:var(--text);padding:12px 16px}
+  input{flex:1}
+  button{cursor:pointer;color:var(--gold)}
+  #hinweis{font-size:12px;color:#8b8f98;text-align:center;max-width:560px}
+</style>
+</head>
+<body>
+  <h1>J A C K</h1>
+  <div id="buehne">
+    <canvas id="ring" width="600" height="600"></canvas>
+    <div id="kern" title="Antippen und sprechen"></div>
+  </div>
+  <div id="zustand">bereit</div>
+  <div id="verlauf"></div>
+  <div id="zeile">
+    <input id="eingabe" placeholder="… oder hier tippen und Enter drücken" autocomplete="off">
+    <button id="senden">Senden</button>
+  </div>
+  <div id="hinweis"></div>
+
+<script>
+const kern=document.getElementById('kern'), zustandEl=document.getElementById('zustand'),
+      verlauf=document.getElementById('verlauf'), eingabe=document.getElementById('eingabe'),
+      hinweis=document.getElementById('hinweis'), leinwand=document.getElementById('ring'),
+      stift=leinwand.getContext('2d');
+
+let pegel=0, phase=0, aktiv=false, stimme=null;
+
+// ---------- Stimme (austauschbar: hier spaeter ElevenLabs einhaengen) ----------
+function stimmeWaehlen(){
+  const alle=speechSynthesis.getVoices();
+  stimme = alle.find(s=>/arthur/i.test(s.name))
+        || alle.find(s=>s.lang.startsWith('de') && /markus|yannick|viktor/i.test(s.name))
+        || alle.find(s=>s.lang.startsWith('de'))
+        || alle[0] || null;
+}
+speechSynthesis.onvoiceschanged=stimmeWaehlen; stimmeWaehlen();
+
+function macStimme(text){
+  try{
+    speechSynthesis.cancel();
+    const s=new SpeechSynthesisUtterance(text);
+    if(stimme) s.voice=stimme;
+    s.lang='de-DE'; s.rate=1.02; s.pitch=.95;
+    s.onstart=()=>setzeZustand('spricht'); s.onend=()=>setzeZustand('bereit');
+    speechSynthesis.speak(s);
+  }catch(e){ setzeZustand('bereit'); }
+}
+
+// Erst ARTHUR ueber ElevenLabs. Klappt das nicht, uebernimmt die Mac-Stimme.
+async function sprich(text){
+  setzeZustand('spricht');
+  try{
+    const a=await fetch('/stimme',{method:'POST',headers:{'Content-Type':'application/json'},
+                                   body:JSON.stringify({text})});
+    if(a.status===200){
+      const ton=new Audio(URL.createObjectURL(await a.blob()));
+      ton.onended=()=>setzeZustand('bereit');
+      ton.onerror=()=>macStimme(text);
+      await ton.play();
+      return;
+    }
+  }catch(e){}
+  macStimme(text);
+}
+
+// ---------- Visualizer ----------
+function zeichne(){
+  const b=leinwand.width, m=b/2;
+  stift.clearRect(0,0,b,b);
+  phase+=0.02;
+  for(let r=0;r<3;r++){
+    const grund=118+r*26, schwung=Math.sin(phase+r)*4 + pegel*(44+r*18);
+    stift.beginPath();
+    for(let i=0;i<=120;i++){
+      const w=(i/120)*Math.PI*2;
+      const radius=grund+schwung*Math.sin(w*(3+r)+phase*(1+r*0.4));
+      const x=m+Math.cos(w)*radius, y=m+Math.sin(w)*radius;
+      i?stift.lineTo(x,y):stift.moveTo(x,y);
+    }
+    stift.closePath();
+    stift.strokeStyle = r===0 ? 'rgba(201,162,75,'+(0.55+pegel*0.4)+')'
+                              : 'rgba(27,166,172,'+(0.16+pegel*0.3)+')';
+    stift.lineWidth = r===0?2.4:1.3;
+    stift.stroke();
+  }
+  requestAnimationFrame(zeichne);
+}
+zeichne();
+
+async function mikrofonPegel(){
+  try{
+    const strom=await navigator.mediaDevices.getUserMedia({audio:true});
+    const kontext=new (window.AudioContext||window.webkitAudioContext)();
+    const analyse=kontext.createAnalyser(); analyse.fftSize=512;
+    kontext.createMediaStreamSource(strom).connect(analyse);
+    const daten=new Uint8Array(analyse.frequencyBinCount);
+    (function messen(){
+      analyse.getByteTimeDomainData(daten);
+      let summe=0; for(const w of daten) summe+=Math.abs(w-128);
+      pegel = aktiv ? Math.min(1,(summe/daten.length)/26) : pegel*0.9;
+      requestAnimationFrame(messen);
+    })();
+  }catch(e){ hinweis.textContent='Kein Mikrofonzugriff — Tippen funktioniert trotzdem.'; }
+}
+
+// ---------- Ohr ----------
+const Erkennung = window.SpeechRecognition || window.webkitSpeechRecognition;
+let ohr=null;
+if(Erkennung){
+  ohr=new Erkennung(); ohr.lang='de-DE'; ohr.interimResults=false; ohr.continuous=false;
+  ohr.onstart=()=>{aktiv=true; setzeZustand('hört zu');};
+  ohr.onerror=()=>{aktiv=false; setzeZustand('bereit');};
+  ohr.onend=()=>{aktiv=false;};
+  ohr.onresult=e=>{ const text=e.results[0][0].transcript; frageStellen(text); };
+}else{
+  hinweis.textContent='Spracheingabe braucht Google Chrome. Tippen funktioniert überall.';
+}
+
+kern.onclick=()=>{
+  if(!ohr) return eingabe.focus();
+  mikrofonPegel();
+  try{ ohr.start(); }catch(e){ ohr.stop(); }
+};
+
+// ---------- Gespräch ----------
+function setzeZustand(t){ zustandEl.textContent=t; }
+function blase(text,wer){
+  const d=document.createElement('div');
+  d.className='blase '+wer; d.textContent=text;
+  verlauf.appendChild(d); verlauf.scrollTop=verlauf.scrollHeight;
+}
+async function frageStellen(text){
+  if(!text.trim()) return;
+  blase(text,'ich'); eingabe.value=''; setzeZustand('denkt nach');
+  try{
+    const a=await fetch('/frage',{method:'POST',headers:{'Content-Type':'application/json'},
+                                 body:JSON.stringify({text})});
+    const d=await a.json();
+    blase(d.antwort,'er'); sprich(d.antwort);
+  }catch(e){
+    const m='Ich erreiche meinen eigenen Dienst nicht. Läuft das Fenster mit dem Server noch?';
+    blase(m,'er'); setzeZustand('bereit');
+  }
+}
+document.getElementById('senden').onclick=()=>frageStellen(eingabe.value);
+eingabe.onkeydown=e=>{ if(e.key==='Enter') frageStellen(eingabe.value); };
+
+fetch('/status').then(r=>r.json()).then(s=>{
+  if(!s.schluessel){ hinweis.textContent='Noch kein Zugangsschlüssel hinterlegt — siehe Datei .env im Ordner JACK.'; }
+  else if(!s.stimme){ hinweis.textContent='Stimme: Mac-Stimme. Für ARTHUR den ElevenLabs-Schlüssel in .env eintragen.'; }
+}).catch(()=>{});
+</script>
+</body>
+</html>

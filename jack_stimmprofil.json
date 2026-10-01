@@ -1,0 +1,12 @@
+{
+  "anbieter": "qwen_lokal",
+  "modell": "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/stimme/modell",
+  "python": "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/stimme/python/bin/python",
+  "profil": "A friendly native German man in his mid thirties speaking fluent standard German. Warm, smooth, rich mid-low voice with a relaxed smile, gentle articulation and lively natural intonation. He is having an easy spontaneous conversation with someone he knows well. Connected flowing sentences, softly rounded vowels, a comfortably quick everyday speaking pace. He sounds present, interested, calm and naturally expressive.",
+  "seed": 20260915,
+  "tempo": 1.15,
+  "name": "JACK · Variante 2",
+  "lokal": true,
+  "referenz_audio": "/Users/gottwald/Library/Mobile Documents/com~apple~CloudDocs/GOTT WALD HOLDING/00_Marken/JACK/stimme/variante-2-referenz.wav",
+  "referenz_text": "Ich bin da. Erzähl mir, was dir gerade durch den Kopf geht. Wir schauen uns das gemeinsam an."
+}

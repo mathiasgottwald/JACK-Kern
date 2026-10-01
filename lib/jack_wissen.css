@@ -1,0 +1,71 @@
+.kw-raum{position:relative;min-width:0;color:var(--text,#f6f0e2);font-size:14px;line-height:1.5;padding:8px 2px 20px}
+.kw-raum *{box-sizing:border-box}
+.kw-raum button,.kw-raum input{font:inherit}
+.kw-kopf{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin:0 0 22px}
+.kw-kopf h2{font:400 clamp(23px,3vw,34px)/1.18 Georgia,serif;margin:7px 0 10px;letter-spacing:-.025em}
+.kw-kopf p{margin:0;color:var(--leise,#9fb3ae);font-size:12px}
+.kw-kopf .kw-eyebrow{font-size:10px;letter-spacing:.18em;color:#d9b969}
+.kw-button{border:1px solid rgba(217,185,105,.26);border-radius:9px;padding:8px 11px;background:rgba(7,29,31,.78);color:#d6dfd8;cursor:pointer;white-space:nowrap;min-height:38px}
+.kw-button:hover,.kw-button[aria-pressed=true],.kw-button[aria-current=page]{border-color:#d9b969;color:#edcf86;background:rgba(217,185,105,.07)}
+.kw-button:disabled{opacity:.4;cursor:default}
+.kw-raum :focus-visible{outline:2px solid #e8ce8b;outline-offset:3px}
+.kw-werkzeuge{display:flex;gap:10px;align-items:end;margin-bottom:12px}
+.kw-suche{flex:1;min-width:0;font-size:11px;color:#adbbb6}
+.kw-suche span{display:block;margin-bottom:6px}
+.kw-suche input{width:100%;border:1px solid rgba(167,195,182,.3);border-radius:10px;background:rgba(2,18,20,.65);color:#f6f0e2;padding:12px 14px;min-height:45px}
+.kw-suche input::placeholder{color:#8fa8a1}
+.kw-nav{display:flex;gap:7px;flex-wrap:wrap;padding:4px 0 22px}
+.kw-nav .kw-button{font-size:11px;border-color:transparent;background:transparent;padding:7px 9px}
+.kw-nav .kw-button[aria-current=page],.kw-nav .kw-button[aria-pressed=true]{background:rgba(217,185,105,.08);border-color:rgba(217,185,105,.3)}
+.kw-karten{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.kw-karte{display:flex;flex-direction:column;text-align:left;position:relative;min-width:0;padding:16px;border:1px solid rgba(141,183,167,.22);border-radius:13px;background:linear-gradient(135deg,rgba(23,52,49,.7),rgba(3,20,23,.82));color:#f6f0e2;cursor:pointer;transition:transform .15s,border-color .15s;min-height:175px}
+.kw-karte:hover{transform:translateY(-2px);border-color:var(--kw-farbe)}
+.kw-karte-top{display:flex;justify-content:space-between;align-items:center;color:#9aafa6;font-size:10px;margin-bottom:14px}
+.kw-punkt{width:9px;height:9px;border-radius:3px;background:var(--kw-farbe)}
+.kw-karte strong{font-size:19px;font-weight:500;margin-bottom:5px}
+.kw-karte-text{font-size:11px;line-height:1.45;color:#a7bab0;max-width:230px}
+.kw-zahl{margin-top:auto;padding-top:14px;font-size:21px;letter-spacing:-.03em;color:var(--kw-farbe)}
+.kw-zahl small{font-size:10px;letter-spacing:0;color:#a7bab0;margin-left:4px}
+.kw-optionen{border:1px solid rgba(217,185,105,.24);padding:16px;border-radius:12px;background:rgba(5,25,27,.85);margin:15px 0}
+.kw-optionen[hidden],.kw-vorschau[hidden]{display:none!important}
+.kw-optionen h3{font-size:15px;font-weight:500;margin:0 0 6px}
+.kw-optionen p{font-size:12px;color:#adbbb6;margin:0 0 14px}
+.kw-checks{display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:18px}
+.kw-checks label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px}
+.kw-checks input{width:17px;height:17px;accent-color:#d9b969}
+.kw-pfad{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:15px;overflow-wrap:anywhere}
+.kw-pfad .kw-button{border:0;background:none;padding:5px;white-space:normal;text-align:left;font-size:12px;color:#d9b969}
+.kw-pfad>span{color:#617c72}
+.kw-listenkopf{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.kw-listenkopf h3{font-size:16px;font-weight:500;margin:0}
+.kw-listenkopf>span{font-size:11px;color:#adbbb6}
+.kw-liste{border-top:1px solid rgba(141,183,167,.2)}
+.kw-zeile{display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(141,183,167,.13);padding:7px 0}
+.kw-eintrag{display:flex;gap:11px;align-items:center;flex:1;min-width:0;text-align:left;background:none;border:0;color:inherit;padding:9px 3px;cursor:pointer}
+.kw-eintrag>span:nth-child(2){flex:1;min-width:0}
+.kw-eintrag strong{font-size:13px;font-weight:500;display:block;overflow-wrap:anywhere}
+.kw-eintrag small{display:block;font-size:10px;color:#8fa89e;margin-top:3px;overflow-wrap:anywhere}
+.kw-eintrag:hover strong{color:#e8ce8b}
+.kw-art{font-size:22px;color:#d9b969}
+.kw-zeile>.kw-button{font-size:10px;border-color:rgba(141,183,167,.2);padding:6px 8px;min-height:34px}
+.kw-seiten{display:flex;align-items:center;justify-content:space-between;margin-top:16px;gap:10px;font-size:12px}
+.kw-gruppen-zurueck{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.kw-leer{padding:25px 12px;color:#a7bab0;border:1px dashed rgba(141,183,167,.3);border-radius:12px;font-size:13px;line-height:1.6}
+.kw-status{font-size:12px;color:#d9b969;min-height:18px;margin:14px 0 8px}
+.kw-fuss{font-size:10px;color:#90a49d;border-top:1px solid rgba(141,183,167,.13);padding-top:12px}
+.kw-vorschau{position:fixed;z-index:70;inset:6vh max(14px,8vw);width:auto;height:auto;max-width:none;max-height:none;margin:0;padding:0;color:#f6f0e2;background:#071e21;border:1px solid rgba(217,185,105,.45);border-radius:16px;box-shadow:0 20px 90px #000;display:flex;flex-direction:column;overflow:hidden;text-align:left}
+.kw-vorschau::backdrop{background:rgba(0,9,10,.75)}
+.kw-vorschau-kopf{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px;border-bottom:1px solid rgba(217,185,105,.2)}
+.kw-vorschau-kopf>div{min-width:0}.kw-vorschau h3{font-size:19px;font-weight:500;margin:0;overflow-wrap:anywhere}
+.kw-vorschau-kopf p{font-size:11px;color:#90a49d;overflow-wrap:anywhere;margin:5px 0 0}
+.kw-lesetext{overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;padding:22px;line-height:1.75;font-size:14px;color:#d5ded7}
+.kw-quellen{border-top:1px solid rgba(217,185,105,.2);margin-top:18px;padding-top:15px}
+.kw-quellen>summary{cursor:pointer;font-size:13px;color:#d9b969;padding:8px 0}
+@media(min-width:1000px){.gehirnvollbild .kw-karten{grid-template-columns:repeat(3,minmax(0,1fr))}.gehirnvollbild .kw-raum{max-width:1200px;margin:auto;width:100%}}
+@media(max-width:420px){.kw-kopf{gap:8px}.kw-kopf>.kw-button{font-size:10px;padding:7px}.kw-werkzeuge{flex-wrap:wrap}.kw-suche{flex-basis:100%}.kw-karten{gap:9px}.kw-karte{padding:12px;min-height:165px}.kw-karte strong{font-size:17px}.kw-karte-text{font-size:10px}.kw-vorschau{inset:8px}.kw-vorschau-kopf{padding:15px}.kw-lesetext{padding:15px}}
+@media(prefers-reduced-motion:reduce){.kw-karte{transition:none}.kw-karte:hover{transform:none}}
+
+/* Die Wissens-Grossansicht nutzt auch auf schmalen Fenstern die ganze Buehne. */
+#buehne.gehirnvollbild:has(#wissenexplorer){padding-bottom:12px!important}
+#buehne.gehirnvollbild:has(#wissenexplorer) #saeuleRechts{flex:1 1 auto;min-height:0;height:100%;overflow:hidden}
+#buehne.gehirnvollbild #bereichrumpf[data-bereich="wissen"]{max-height:none!important;min-height:0;overflow-y:auto;-webkit-mask-image:none;mask-image:none}

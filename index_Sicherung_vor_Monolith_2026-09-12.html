@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JACK — Kommandozentrale</title>
+<style>
+  :root{--grund:#03050B;--linie:rgba(201,162,75,.14);--gold:#C9A24B;--goldhell:#E7C87E;
+        --petrol:#128388;--petrolhell:#1BA6AC;--alarm:#E0574F;--text:#EDEEF1;--matt:#78808F}
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;overflow:hidden;background:var(--grund)}
+  body{color:var(--text);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+       display:grid;grid-template-rows:54px 1fr 34px}
+  header,footer{position:relative;z-index:3;background:rgba(3,5,11,.55);backdrop-filter:blur(10px)}
+  header{display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+         border-bottom:1px solid var(--linie)}
+  .name{font-size:13px;letter-spacing:.52em;color:var(--gold)}
+  .rolle{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--matt);margin-left:14px}
+  .anzeigen{display:flex;gap:20px;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--matt)}
+  .anzeigen div{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+  .anzeigen b{font-size:12px;letter-spacing:.05em;color:var(--petrolhell);text-transform:none;font-weight:500}
+  .anzeigen b.rot{color:var(--alarm)}
+  main{position:relative;min-height:0}
+  #welt{position:absolute;inset:0}
+  #welt canvas{display:block}
+  .seite{position:absolute;top:0;right:0;bottom:0;width:330px;z-index:2;
+         background:linear-gradient(90deg,rgba(3,5,11,0),rgba(3,5,11,.82) 22%);
+         display:grid;grid-template-rows:auto 1fr auto;padding-left:26px}
+  .kopf{padding:14px 18px 10px;font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--matt)}
+  #verlauf{overflow-y:auto;padding:0 16px 8px;display:flex;flex-direction:column;gap:10px}
+  .blase{padding:10px 13px;border-radius:12px;max-width:96%;white-space:pre-wrap;font-size:13.5px}
+  .ich{align-self:flex-end;background:rgba(18,131,136,.18);border:1px solid rgba(27,166,172,.28)}
+  .er{align-self:flex-start;background:rgba(201,162,75,.1);border:1px solid rgba(201,162,75,.22)}
+  .notiz{align-self:flex-start;font-size:11px;color:var(--matt);border-left:2px solid var(--petrol);padding-left:9px}
+  .eingabe{padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+  input{font:inherit;border-radius:11px;border:1px solid var(--linie);background:rgba(255,255,255,.05);
+        color:var(--text);padding:11px 14px;outline:none;width:100%}
+  input:focus{border-color:rgba(201,162,75,.5)}
+  .knoepfe{display:flex;gap:7px}
+  button{flex:1;font:inherit;font-size:12.5px;border-radius:11px;border:1px solid var(--linie);
+         background:rgba(255,255,255,.05);color:var(--gold);padding:9px 6px;cursor:pointer;transition:.18s}
+  button:hover{border-color:var(--gold);background:rgba(201,162,75,.12)}
+  button.an{color:var(--petrolhell);border-color:rgba(27,166,172,.55);background:rgba(18,131,136,.16)}
+  #zustand{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:2;
+           font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--petrolhell)}
+  #karte{position:absolute;left:38px;bottom:30px;z-index:2;width:380px;padding:15px 19px;border-radius:15px;
+         background:rgba(6,10,20,.78);border:1px solid var(--linie);backdrop-filter:blur(14px);
+         opacity:0;transform:translateY(8px);transition:.22s;pointer-events:none}
+  #karte.an{opacity:1;transform:none}
+  #karte h4{margin:0 0 7px;font-size:11.5px;letter-spacing:.26em;color:var(--gold);text-transform:uppercase}
+  #karte p{margin:4px 0;font-size:12.5px;color:var(--matt);line-height:1.55}
+  #karte p b{color:var(--text);font-weight:500}
+  #karte .alarm{color:var(--alarm)}
+  footer{display:flex;align-items:center;gap:18px;padding:0 24px;border-top:1px solid var(--linie);
+         font-size:10.5px;color:var(--matt);overflow:hidden;white-space:nowrap}
+  #laufband{flex:1;overflow:hidden;position:relative;height:100%}
+  #laufband span{position:absolute;top:50%;transform:translateY(-50%);white-space:nowrap;
+                 animation:zieh 55s linear infinite}
+  @keyframes zieh{from{left:100%}to{left:-300%}}
+  #ladefehler{position:absolute;inset:0;display:none;place-items:center;text-align:center;
+              color:var(--matt);font-size:13px;z-index:5;padding:40px}
+  ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(201,162,75,.2);border-radius:3px}
+</style>
+</head>
+<body>
+<header>
+  <div><span class="name">J A C K</span><span class="rolle">Kommandozentrale · GOTT WALD HOLDING</span></div>
+  <div class="anzeigen">
+    <div><span>Marken</span><b id="aMarken">–</b></div>
+    <div><span>Blockiert</span><b id="aBlock">–</b></div>
+    <div><span>Gespräch</span><b id="aVerlauf">0</b></div>
+    <div><span>Stimme</span><b id="aStimme">–</b></div>
+    <div><span>Mikro</span><b id="aWach">an</b></div><div><span>Ton</span><b id="aTon">an</b></div>
+    <div><span>Zeit</span><b id="aZeit">–</b></div>
+  </div>
+</header>
+
+<main>
+  <div id="welt"></div>
+  <div id="zustand">bereit</div>
+  <div id="karte"><h4 id="kName">—</h4><div id="kText"></div></div>
+  <div id="ladefehler">Die 3D-Darstellung konnte nicht geladen werden.<br>Datei lib/three.min.js fehlt.</div>
+  <div class="seite">
+    <div class="kopf">Verlauf</div>
+    <div id="verlauf"></div>
+    <div class="eingabe">
+      <input id="eingabe" placeholder="Sprechen oder tippen …" autocomplete="off">
+      <div class="knoepfe">
+        <button id="senden">Senden</button><button id="wach" class="an">Mikro an</button><button id="stumm">Stumm</button><button id="neu">Neu</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span style="color:var(--gold);letter-spacing:.2em">OFFEN</span>
+  <div id="laufband"><span id="laufbandText">Lagebild wird geladen …</span></div>
+</footer>
+
+<script src="/lib/three.min.js"></script>
+<script>
+function el(i){return document.getElementById(i)}
+const welt=el('welt'),verlauf=el('verlauf'),eingabe=el('eingabe'),karte=el('karte'),zustandEl=el('zustand');
+let pegelEin=0,pegelAus=0,hoert=false,wachmodus=true,denkt=false,stimme=null,tonJetzt=null,lage=[],stumm=false;
+
+if(!window.THREE){ el('ladefehler').style.display='grid'; }
+else {
+/* ================= 3D-Welt ================= */
+const szene=new THREE.Scene();
+szene.fog=new THREE.FogExp2(0x03050B,0.0016);
+const kamera=new THREE.PerspectiveCamera(52,1,1,4000);
+kamera.position.set(0,150,560);
+const maler=new THREE.WebGLRenderer({antialias:true,alpha:false});
+maler.setPixelRatio(Math.min(devicePixelRatio,2));
+maler.setClearColor(0x03050B,1);
+welt.appendChild(maler.domElement);
+
+function passe(){ const b=welt.clientWidth,h=welt.clientHeight;
+  kamera.aspect=b/h; kamera.updateProjectionMatrix(); maler.setSize(b,h); }
+addEventListener('resize',passe);
+
+/* ---- Sternenstaub ---- */
+function staub(anzahl,radius,groesse,farbe,deckung){
+  const g=new THREE.BufferGeometry(), pos=new Float32Array(anzahl*3);
+  for(let i=0;i<anzahl;i++){
+    const r=radius*(0.35+Math.random()*0.65), th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1);
+    pos[i*3]=r*Math.sin(ph)*Math.cos(th); pos[i*3+1]=r*Math.cos(ph)*0.6; pos[i*3+2]=r*Math.sin(ph)*Math.sin(th);
+  }
+  g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  return new THREE.Points(g,new THREE.PointsMaterial({color:farbe,size:groesse,transparent:true,
+        opacity:deckung,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true}));
+}
+const sternfeldFern=staub(2600,1900,2.2,0xBFD4E8,0.55); szene.add(sternfeldFern);
+const sternfeldNah =staub(700,1000,3.4,0x9FE6E8,0.5);  szene.add(sternfeldNah);
+
+/* ---- Kern: Fresnel-Glut ---- */
+const kernGruppe=new THREE.Group(); szene.add(kernGruppe);
+const kernMat=new THREE.ShaderMaterial({
+  uniforms:{zeit:{value:0},puls:{value:0}},
+  vertexShader:`varying vec3 vN; varying vec3 vP; uniform float zeit; uniform float puls;
+    void main(){ vec3 p=position;
+      float w=sin(p.x*0.06+zeit*1.4)*cos(p.y*0.07-zeit*1.1)*sin(p.z*0.06+zeit*0.9);
+      p+=normal*(w*(3.0+puls*16.0));
+      vN=normalize(normalMatrix*normal); vP=(modelViewMatrix*vec4(p,1.0)).xyz;
+      gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0); }`,
+  fragmentShader:`varying vec3 vN; varying vec3 vP; uniform float zeit; uniform float puls;
+    void main(){ vec3 n=normalize(vN); vec3 b=normalize(-vP);
+      float f=pow(1.0-max(dot(n,b),0.0),1.6);
+      vec3 innen=vec3(1.0,0.92,0.72); vec3 rand=vec3(0.86,0.66,0.28);
+      vec3 c=mix(innen,rand,f)*(1.25+puls*1.4+0.16*sin(zeit*2.2));
+      gl_FragColor=vec4(c,1.0); }`
+});
+const kern=new THREE.Mesh(new THREE.IcosahedronGeometry(42,6),kernMat); kernGruppe.add(kern);
+
+function schein(radius,farbe,deckung){
+  const m=new THREE.ShaderMaterial({transparent:true,depthWrite:false,
+    blending:THREE.AdditiveBlending,side:THREE.BackSide,
+    uniforms:{f:{value:new THREE.Color(farbe)},d:{value:deckung},puls:{value:0}},
+    vertexShader:`varying vec3 vN; varying vec3 vP;
+      void main(){ vN=normalize(normalMatrix*normal); vP=(modelViewMatrix*vec4(position,1.0)).xyz;
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+    fragmentShader:`varying vec3 vN; varying vec3 vP; uniform vec3 f; uniform float d; uniform float puls;
+      void main(){ float i=pow(0.72-abs(dot(normalize(vN),normalize(-vP))),3.0);
+        gl_FragColor=vec4(f,i*d*(1.0+puls)); }`});
+  return new THREE.Mesh(new THREE.SphereGeometry(radius,48,48),m);
+}
+const halo1=schein(110,0xC9A24B,0.95), halo2=schein(210,0x128388,0.55);
+kernGruppe.add(halo1); kernGruppe.add(halo2);
+
+/* ---- Pulswellen ---- */
+const wellen=[];
+for(let i=0;i<4;i++){
+  const m=new THREE.Mesh(new THREE.RingGeometry(1,1.035,128),
+    new THREE.MeshBasicMaterial({color:0xC9A24B,transparent:true,opacity:0,
+      side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false}));
+  m.rotation.x=-Math.PI/2; m.userData.phase=i/4; szene.add(m); wellen.push(m);
+}
+
+/* ---- Satelliten ---- */
+const bahnGruppe=new THREE.Group(); szene.add(bahnGruppe);
+let satelliten=[];
+function bahnLinie(radius,neigung,drehung,farbe,deckung){
+  const punkte=[];
+  for(let i=0;i<=180;i++){ const a=(i/180)*Math.PI*2;
+    punkte.push(new THREE.Vector3(Math.cos(a)*radius,0,Math.sin(a)*radius)); }
+  const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints(punkte),
+    new THREE.LineBasicMaterial({color:farbe,transparent:true,opacity:deckung,
+      blending:THREE.AdditiveBlending,depthWrite:false}));
+  l.rotation.x=neigung; l.rotation.y=drehung; return l;
+}
+function satellitenBauen(){
+  satelliten.forEach(s=>{bahnGruppe.remove(s.gruppe); bahnGruppe.remove(s.bahn);});
+  satelliten=[];
+  lage.forEach((d,i)=>{
+    const radius=180+((i%4)*62)+((i%2)*22);
+    const neigung=(i%2?1:-1)*(0.16+(i%5)*0.11);
+    const drehung=(i/lage.length)*Math.PI*2*0.7;
+    const farbe = d.blockiert?0xE0574F : d.unbekannt?0x7B8394 : 0x4FE3E6;
+
+    const bahn=bahnLinie(radius,neigung,drehung,farbe,d.blockiert?0.30:0.13);
+    bahnGruppe.add(bahn);
+
+    const gruppe=new THREE.Group();
+    const kugel=new THREE.Mesh(new THREE.SphereGeometry(9,32,32),
+      new THREE.MeshBasicMaterial({color:farbe}));
+    const aura=schein(30,farbe,0.85);
+    gruppe.add(kugel); gruppe.add(aura);
+
+    // Schweif
+    const schweifPunkte=[];
+    for(let j=0;j<26;j++) schweifPunkte.push(new THREE.Vector3(0,0,0));
+    const schweif=new THREE.Line(new THREE.BufferGeometry().setFromPoints(schweifPunkte),
+      new THREE.LineBasicMaterial({color:farbe,transparent:true,opacity:0.42,
+        blending:THREE.AdditiveBlending,depthWrite:false}));
+    szene.add(schweif);
+
+    // Namensschild
+    const lw=document.createElement('canvas'); lw.width=512; lw.height=96;
+    const lg=lw.getContext('2d');
+    lg.font='600 40px -apple-system,sans-serif'; lg.textAlign='center'; lg.textBaseline='middle';
+    lg.fillStyle='rgba(237,238,241,.92)'; lg.fillText(d.marke.replace(/_/g,' '),256,48);
+    const schild=new THREE.Sprite(new THREE.SpriteMaterial({
+      map:new THREE.CanvasTexture(lw),transparent:true,depthWrite:false,opacity:.85}));
+    schild.scale.set(120,22,1); schild.position.y=26; gruppe.add(schild);
+
+    bahnGruppe.add(gruppe);
+    satelliten.push({d,gruppe,bahn,kugel,aura,schweif,schild,radius,neigung,drehung,
+      winkel:Math.random()*Math.PI*2, tempo:0.00042+(i%5)*0.00011, spur:[]});
+  });
+}
+
+/* ---- Zeigen und Klicken ---- */
+const strahl=new THREE.Raycaster(); const zeiger=new THREE.Vector2(-9,-9); let unterZeiger=null;
+welt.addEventListener('mousemove',e=>{const v=welt.getBoundingClientRect();
+  zeiger.x=((e.clientX-v.left)/v.width)*2-1; zeiger.y=-((e.clientY-v.top)/v.height)*2+1;});
+welt.addEventListener('mouseleave',()=>{zeiger.set(-9,-9);});
+welt.addEventListener('click',()=>{
+  if(tonJetzt) return stoppSprechen();
+  if(unterZeiger) return frageStellen('Was steht bei '+unterZeiger.d.marke+' an?');
+  if(ohr){ mikrofon(); starteOhr(); }
+});
+let dreht=false,letzteX=0,letzteY=0,kameraWinkel=0,kameraHoehe=150;
+welt.addEventListener('mousedown',e=>{dreht=true;letzteX=e.clientX;letzteY=e.clientY;});
+addEventListener('mouseup',()=>dreht=false);
+addEventListener('mousemove',e=>{ if(!dreht)return;
+  kameraWinkel-=(e.clientX-letzteX)*0.004;
+  kameraHoehe=Math.max(-200,Math.min(420,kameraHoehe+(e.clientY-letzteY)*1.1));
+  letzteX=e.clientX; letzteY=e.clientY;});
+let abstand=560;
+welt.addEventListener('wheel',e=>{e.preventDefault();
+  abstand=Math.max(240,Math.min(1100,abstand+e.deltaY*0.6));},{passive:false});
+
+/* ---- Schleife ---- */
+let t=0;
+function lauf(){
+  requestAnimationFrame(lauf);
+  const p=Math.max(pegelEin,pegelAus*1.25);
+  t+=denkt?0.032:0.012;
+
+  kernMat.uniforms.zeit.value=t; kernMat.uniforms.puls.value=p;
+  halo1.material.uniforms.puls.value=p*1.5; halo2.material.uniforms.puls.value=p;
+  kernGruppe.rotation.y+=0.0016; kernGruppe.rotation.x=Math.sin(t*0.25)*0.06;
+
+  wellen.forEach((w,i)=>{
+    let ph=(w.userData.phase+t*0.14)%1; w.userData.phase=ph-t*0.14;
+    const s=60+ph*760; w.scale.set(s,s,s);
+    w.material.opacity=0.26*(1-ph)*(0.4+p);
+  });
+
+  sternfeldFern.rotation.y+=0.00018; sternfeldNah.rotation.y-=0.00035;
+
+  strahl.setFromCamera(zeiger,kamera); unterZeiger=null;
+  satelliten.forEach(s=>{
+    s.winkel+=s.tempo*(denkt?2.1:1)*16;
+    const x=Math.cos(s.winkel)*s.radius, z=Math.sin(s.winkel)*s.radius;
+    const v=new THREE.Vector3(x,0,z);
+    v.applyAxisAngle(new THREE.Vector3(1,0,0),s.neigung);
+    v.applyAxisAngle(new THREE.Vector3(0,1,0),s.drehung);
+    s.gruppe.position.copy(v);
+    const flimmer=s.d.blockiert?(0.55+0.45*Math.sin(t*6)):1;
+    s.aura.material.uniforms.d.value=0.85*flimmer;
+    s.kugel.scale.setScalar(1+p*0.35);
+
+    s.spur.push(v.clone()); if(s.spur.length>26) s.spur.shift();
+    if(s.spur.length>1) s.schweif.geometry.setFromPoints(s.spur);
+
+    const treffer=strahl.intersectObject(s.kugel,false);
+    if(treffer.length){ unterZeiger=s; s.schild.material.opacity=1; s.kugel.scale.setScalar(1.5); }
+    else s.schild.material.opacity=0.8;
+  });
+  karteZeigen(unterZeiger);
+  welt.style.cursor=unterZeiger?'pointer':(dreht?'grabbing':'grab');
+
+  kameraWinkel+=0.0007;
+  kamera.position.set(Math.sin(kameraWinkel)*abstand,kameraHoehe,Math.cos(kameraWinkel)*abstand);
+  kamera.lookAt(0,0,0);
+  maler.render(szene,kamera);
+}
+passe(); lauf();
+
+function karteZeigen(s){
+  if(!s){ karte.classList.remove('an'); return; }
+  el('kName').textContent=s.d.marke.replace(/_/g,' ');
+  let h='';
+  if(s.d.blockiert) h+='<p class="alarm"><b>Blockiert:</b> '+s.d.blocker+'</p>';
+  if(s.d.naechste) h+='<p><b>Als Nächstes:</b> '+s.d.naechste.slice(0,200)+'</p>';
+  if(s.d.tage!==null) h+='<p>Zuletzt angefasst vor '+s.d.tage+' Tagen · '+s.d.entscheidungen+' Entscheidungen</p>';
+  el('kText').innerHTML=h||'<p>Noch kein Stand hinterlegt.</p>';
+  karte.classList.add('an');
+}
+window.satellitenBauen=satellitenBauen;
+}
+
+/* ================= Daten, Stimme, Ohr ================= */
+async function lageLaden(){
+  try{
+    lage=await (await fetch('/lage')).json();
+    if(window.satellitenBauen) window.satellitenBauen();
+    const b=lage.filter(m=>m.blockiert);
+    el('aMarken').textContent=lage.length;
+    const z=el('aBlock'); z.textContent=b.length; z.classList.toggle('rot',b.length>0);
+    const punkte=lage.filter(m=>m.naechste).map(m=>m.marke.replace(/_/g,' ')+': '+m.naechste.slice(0,110));
+    el('laufbandText').textContent=punkte.length?punkte.join('   ·   '):'Keine offenen Punkte hinterlegt.';
+  }catch(e){}
+}
+function stimmeWaehlen(){const a=speechSynthesis.getVoices();
+  stimme=a.find(s=>s.lang.startsWith('de')&&/markus|yannick|viktor/i.test(s.name))
+       ||a.find(s=>s.lang.startsWith('de'))||a[0]||null;}
+speechSynthesis.onvoiceschanged=stimmeWaehlen; stimmeWaehlen();
+function macStimme(x){try{speechSynthesis.cancel();
+  const s=new SpeechSynthesisUtterance(x); if(stimme)s.voice=stimme;
+  s.lang='de-DE'; s.rate=1.03; s.onend=fertig; speechSynthesis.speak(s);}catch(e){fertig();}}
+async function sprich(text){
+  if(stumm){ fertig(); return; }
+  setzeZustand('spricht');
+  try{
+    const a=await fetch('/stimme',{method:'POST',headers:{'Content-Type':'application/json'},
+                                   body:JSON.stringify({text})});
+    if(a.status===200){
+      const ton=new Audio(URL.createObjectURL(await a.blob())); tonJetzt=ton;
+      try{ const k=new (window.AudioContext||window.webkitAudioContext)();
+        const an=k.createAnalyser(); an.fftSize=256;
+        k.createMediaElementSource(ton).connect(an); an.connect(k.destination);
+        const d=new Uint8Array(an.frequencyBinCount);
+        (function m(){ an.getByteTimeDomainData(d); let s=0;
+          for(const w of d) s+=Math.abs(w-128);
+          pegelAus=ton.paused?pegelAus*0.85:Math.min(1,(s/d.length)/22);
+          if(!ton.ended) requestAnimationFrame(m); else pegelAus=0; })();
+      }catch(e){}
+      ton.onended=()=>{pegelAus=0;tonJetzt=null;fertig();};
+      ton.onerror=()=>macStimme(text);
+      await ton.play(); return;
+    }
+  }catch(e){}
+  macStimme(text);
+}
+function fertig(){setzeZustand(wachmodus?'hört zu':'bereit'); if(wachmodus)starteOhr();}
+function stoppSprechen(){try{speechSynthesis.cancel();}catch(e){}
+  if(tonJetzt){try{tonJetzt.pause();}catch(e){}tonJetzt=null;} pegelAus=0; fertig();}
+
+let mikroBereit=false;
+async function mikrofon(){ if(mikroBereit)return; mikroBereit=true;
+  try{ const strom=await navigator.mediaDevices.getUserMedia({audio:true});
+    const k=new (window.AudioContext||window.webkitAudioContext)();
+    const a=k.createAnalyser(); a.fftSize=512; k.createMediaStreamSource(strom).connect(a);
+    const d=new Uint8Array(a.frequencyBinCount);
+    (function m(){ a.getByteTimeDomainData(d); let s=0;
+      for(const w of d) s+=Math.abs(w-128);
+      pegelEin=(hoert||wachmodus)?Math.min(1,(s/d.length)/26):pegelEin*0.88;
+      requestAnimationFrame(m); })();
+  }catch(e){} }
+const Erk=window.SpeechRecognition||window.webkitSpeechRecognition;
+let ohr=null,laeuft=false;
+if(Erk){ ohr=new Erk(); ohr.lang='de-DE'; ohr.interimResults=false; ohr.continuous=true;
+  ohr.onstart=()=>{laeuft=true;hoert=true;if(!wachmodus)setzeZustand('hört zu');};
+  ohr.onerror=()=>{laeuft=false;hoert=false;};
+  ohr.onend=()=>{laeuft=false;hoert=false;if(wachmodus&&!denkt)setTimeout(starteOhr,400);};
+  ohr.onresult=e=>{ const text=e.results[e.results.length-1][0].transcript.trim(); if(!text)return;
+    if(tonJetzt||speechSynthesis.speaking) stoppSprechen();   // Patron hat Vorrang
+    const l=text.toLowerCase();
+    const mitWeckwort=/\b(jack|jak|jäck|check)\b/.test(l);
+    let inhalt=text;
+    if(mitWeckwort) inhalt=text.replace(/^[^a-zA-ZäöüÄÖÜ]*\b(jack|jak|jäck|check)\b[,.\s]*/i,'').trim();
+    if(!inhalt || inhalt.split(/\s+/).length<2) { setzeZustand('hört zu'); return; }
+    frageStellen(inhalt); };
+}
+function starteOhr(){ if(ohr&&!laeuft&&!denkt){try{ohr.start();}catch(e){}} }
+
+el('wach').onclick=()=>{ wachmodus=!wachmodus;
+  el('aWach').textContent=wachmodus?'an':'aus';
+  el('wach').textContent=wachmodus?'Mikro an':'Mikro aus';
+  el('wach').classList.toggle('an',wachmodus);
+  if(wachmodus){mikrofon();starteOhr();setzeZustand('hört zu');}
+  else{try{ohr&&ohr.stop();}catch(e){} setzeZustand('Mikro aus');} };
+el('stumm').onclick=()=>{ stumm=!stumm;
+  el('aTon').textContent=stumm?'stumm':'an';
+  el('stumm').textContent=stumm?'Ton an':'Stumm';
+  el('stumm').classList.toggle('an',stumm);
+  if(stumm) stoppSprechen(); };
+el('neu').onclick=async()=>{await fetch('/neu');verlauf.innerHTML='';
+  el('aVerlauf').textContent='0'; blase('Gespräch zurückgesetzt.','notiz');};
+
+function setzeZustand(x){zustandEl.textContent=x;}
+function blase(text,wer){const d=document.createElement('div');
+  d.className=wer==='notiz'?'notiz':'blase '+wer; d.textContent=text;
+  verlauf.appendChild(d); verlauf.scrollTop=verlauf.scrollHeight;}
+async function frageStellen(text){
+  if(!text.trim()||denkt)return;
+  denkt=true; blase(text,'ich'); eingabe.value=''; setzeZustand('denkt nach');
+  try{ohr&&ohr.stop();}catch(e){}
+  try{
+    const a=await fetch('/frage',{method:'POST',headers:{'Content-Type':'application/json'},
+                                  body:JSON.stringify({text})});
+    const d=await a.json();
+    blase(d.antwort,'er'); if(d.notiz){blase('Abgelegt: '+d.notiz,'notiz'); lageLaden();}
+    denkt=false; sprich(d.antwort);
+    fetch('/status').then(r=>r.json()).then(s=>el('aVerlauf').textContent=s.verlauf).catch(()=>{});
+  }catch(e){ denkt=false;
+    blase('Ich erreiche meinen eigenen Dienst nicht. Läuft das Terminalfenster noch?','er');
+    setzeZustand('bereit'); }
+}
+el('senden').onclick=()=>frageStellen(eingabe.value);
+eingabe.onkeydown=e=>{if(e.key==='Enter')frageStellen(eingabe.value);};
+setInterval(()=>{const d=new Date();
+  el('aZeit').textContent=d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});},1000);
+fetch('/status').then(r=>r.json()).then(s=>{el('aStimme').textContent=s.stimme?'Arthur':'Mac';}).catch(()=>{});
+lageLaden(); setInterval(lageLaden,60000);
+
+/* Beim Start: begruessen und sofort zuhoeren */
+async function starten(){
+  try{
+    const g=await (await fetch('/begruessung')).json();
+    blase(g.text,'er'); sprich(g.text);
+  }catch(e){}
+  mikrofon(); starteOhr();
+}
+addEventListener('click',function einmal(){ mikrofon(); starteOhr();
+  removeEventListener('click',einmal); },{once:true});
+setTimeout(starten,700);
+</script>
+</body>
+</html>

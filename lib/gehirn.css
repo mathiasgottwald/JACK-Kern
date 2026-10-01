@@ -1,0 +1,14 @@
+.gehirn-offen #buehne{display:block;overflow:auto;padding:18px 28px}
+.gehirn-offen #saeuleLinks{display:block;height:100%;padding:0;perspective:none}
+.gehirn-offen #quellenkarte,.gehirn-offen #mitte,.gehirn-offen #saeuleRechts,.gehirn-offen #faeden{display:none}
+.gehirn-offen #bereich{height:100%;min-height:480px;background:#061B1E;border:1px solid #42605a;border-radius:20px;border-image:none;transform:none!important;filter:none;box-shadow:none;-webkit-box-reflect:unset}
+.gehirn-offen #bereichrumpf{overflow:hidden;mask-image:none;-webkit-mask-image:none}
+.gehirnwerkzeuge{display:flex;flex-wrap:wrap;gap:8px}
+.gehirnwerkzeuge input,.gehirnwerkzeuge select,.gehirnwerkzeuge button,.gehirndetail button{border:1px solid #42605a;border-radius:9px;padding:9px 12px;color:#F6F0E2;background:#0b292c;font:inherit;font-size:13px}
+.gehirnwerkzeuge input{flex:1;min-width:180px}.gehirnwerkzeuge button:hover,.gehirndetail button:hover{border-color:#D4AF37}
+.gehirnstand{font-size:12px;color:#adc0b8}.gehirninhalt{display:flex;flex:1!important;min-height:280px;gap:16px}
+#gehirnnetz{flex:1;min-width:0;border:1px solid #21494b;border-radius:12px;min-height:260px;background:#061B1E}
+.gehirndetail{width:260px;overflow:auto;font-size:13px;display:flex;flex-direction:column;gap:10px;padding:10px 0}
+.gehirndetail h3{color:#D4AF37;font-weight:500;font-size:18px}.gehirnpfad{overflow-wrap:anywhere;color:#adc0b8}
+.gehirndetail button{text-align:left}.gehirnlegende{display:flex;gap:18px;flex-wrap:wrap;font-size:12px}
+@media(max-width:700px){.gehirn-offen #buehne{padding:12px}.gehirn-offen #bereich{height:auto;min-height:700px;padding:14px}.gehirninhalt{flex-direction:column}.gehirndetail{width:100%;max-height:180px}#gehirnnetz{min-height:350px}.gehirnwerkzeuge input{width:100%;flex-basis:100%}.gehirnlegende{gap:10px}}
