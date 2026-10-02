@@ -212,11 +212,12 @@ def _pruefe_obsidian(root):
 def _pruefe_codex(root):
     try:
         import codex_bruecke
+        codex = codex_bruecke.codex_pfad(root)
     except Exception as fehler:
         return 'fehler', _kurz(fehler)
-    if codex_bruecke.CODEX.is_file():
-        return 'ok', 'Codex vorhanden: ' + str(codex_bruecke.CODEX)
-    return 'warnung', 'Codex ist auf diesem Mac nicht installiert'
+    if codex is not None:
+        return 'ok', 'Codex lokal vorhanden (Anmeldung nicht geprueft): ' + str(codex)
+    return 'warnung', 'Keine ausfuehrbare Codex-CLI gefunden'
 
 
 def _pruefe_tailscale(root):
