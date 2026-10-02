@@ -21,4 +21,4 @@ for d in dateien:
 print("%d Dateien: %d gruen, %d rot, %d Zeitueberschreitung" % (len(dateien), gruen, len(rot), len(zeit)))
 for x in rot: print("ROT  ", x)
 for x in zeit: print("ZEIT ", x)
-sys.exit(1 if rot else 0)
+sys.exit(1 if rot or zeit or not dateien else 0)
